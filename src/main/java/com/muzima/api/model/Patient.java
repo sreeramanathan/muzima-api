@@ -18,6 +18,7 @@ public class Patient extends Person implements Comparable<Patient> {
 
     private List<PatientIdentifier> identifiers;
     private List<PersonAttribute> attributes;
+    private PatientFingerprint patientFingerprint;
 
     public void addIdentifier(final PatientIdentifier identifier) {
         getIdentifiers().add(identifier);
@@ -148,4 +149,19 @@ public class Patient extends Person implements Comparable<Patient> {
         }
         return null;
     }
+
+    public PatientFingerprint getPatientFingerprint() {
+        return patientFingerprint;
+    }
+
+    public void setPatientFingerprint(PatientFingerprint patientFingerprint) {
+        this.patientFingerprint = patientFingerprint;
+    }
+
+    public String getFingerprint() {
+        if(this.getPatientFingerprint() == null)
+            return null;
+        return this.getPatientFingerprint().getFingerprint();
+    }
+
 }

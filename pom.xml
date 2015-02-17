@@ -8,6 +8,19 @@
     <artifactId>muzima-api</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <repositories>
+        <repository>
+            <id>local-project-libraries-github</id>
+            <name>Local project libraries</name>
+            <url>https://raw.github.com/muzima/muzima-maven/master/releases</url>
+        </repository>
+        <repository>
+            <id>local-project-libraries-snapshot-github-search-api</id>
+            <name>Local project libraries</name>
+            <url>https://raw.github.com/muzima/muzima-maven/search-api</url>
+            <snapshots/>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.muzima</groupId>

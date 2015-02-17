@@ -9,10 +9,7 @@
 package com.muzima.api.model.algorithm;
 
 import com.jayway.jsonpath.JsonPath;
-import com.muzima.api.model.Patient;
-import com.muzima.api.model.PatientIdentifier;
-import com.muzima.api.model.PersonAttribute;
-import com.muzima.api.model.PersonName;
+import com.muzima.api.model.*;
 import com.muzima.search.api.model.object.Searchable;
 import com.muzima.util.JsonUtils;
 import net.minidev.json.JSONArray;
@@ -28,15 +25,18 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             "(uuid,voided,gender,birthdate," +
                     "names:" + PersonNameAlgorithm.PERSON_NAME_REPRESENTATION + "," +
                     "identifiers:" + PatientIdentifierAlgorithm.PATIENT_IDENTIFIER_REPRESENTATION + "," +
+                    "patientFingerprint:" + PatientFingerprintAlgorithm.STANDARD_FINGERPRINT_REPRESENTATION + "," +
                     "attributes:" + PersonAttributeAlgorithm.PERSON_ATTRIBUTE_REPRESENTATION + ",)";
     private PersonNameAlgorithm personNameAlgorithm;
     private PatientIdentifierAlgorithm patientIdentifierAlgorithm;
     private PersonAttributeAlgorithm personAttributeAlgorithm;
+    private PatientFingerprintAlgorithm patientFingerprintAlgorithm;
 
     public PatientAlgorithm() {
         this.personNameAlgorithm = new PersonNameAlgorithm();
         this.patientIdentifierAlgorithm = new PatientIdentifierAlgorithm();
         this.personAttributeAlgorithm = new PersonAttributeAlgorithm();
+        this.patientFingerprintAlgorithm = new PatientFingerprintAlgorithm();
     }
 
     /*
@@ -66,6 +66,7 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             patient.addattribute(
                     (PersonAttribute) personAttributeAlgorithm.deserialize(String.valueOf(attributeObject)));
         }
+        patient.setPatientFingerprint((PatientFingerprint)  patientFingerprintAlgorithm.deserialize("$['patientFingerprint']"));
         return patient;
     }
 
@@ -101,6 +102,8 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             attributeArray.add(JsonPath.read(name, "$"));
         }
         jsonObject.put("attributes", attributeArray);
+        String fingerprint = patientFingerprintAlgorithm.serialize(patient.getPatientFingerprint());
+        jsonObject.put("patientFingerprint", JsonPath.read(fingerprint, "$"));
         return jsonObject.toJSONString();
     }
 }
