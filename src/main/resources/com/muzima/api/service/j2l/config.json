@@ -208,6 +208,13 @@
             }
         },
         {
+            "resource.name": "Patient fingerprint resource",
+            "node.root": "$",
+            "resource.object": "com.muzima.api.model.PatientFingerprint",
+            "algorithm.class": "com.muzima.api.model.algorithm.PatientFingerprintAlgorithm",
+            "resolver.class": "com.muzima.api.model.resolver.PatientFingerprintResolver"
+        },
+        {
             "resource.name": "Uuid Form Resource",
             "node.root": "$",
             "resource.object": "com.muzima.api.model.Form",

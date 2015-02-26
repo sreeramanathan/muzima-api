@@ -8,15 +8,22 @@
 
 package com.muzima.api.model.algorithm;
 
+import com.google.inject.Inject;
 import com.jayway.jsonpath.JsonPath;
 import com.muzima.api.model.*;
+import com.muzima.search.api.context.ServiceContext;
 import com.muzima.search.api.model.object.Searchable;
+import com.muzima.search.api.service.RestAssuredService;
 import com.muzima.util.JsonUtils;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.muzima.util.Constants.PATIENT_FINGERPRINT_RESOURCE;
 
 public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
 
@@ -25,18 +32,19 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             "(uuid,voided,gender,birthdate," +
                     "names:" + PersonNameAlgorithm.PERSON_NAME_REPRESENTATION + "," +
                     "identifiers:" + PatientIdentifierAlgorithm.PATIENT_IDENTIFIER_REPRESENTATION + "," +
-                    "patientFingerprint:" + PatientFingerprintAlgorithm.STANDARD_FINGERPRINT_REPRESENTATION + "," +
                     "attributes:" + PersonAttributeAlgorithm.PERSON_ATTRIBUTE_REPRESENTATION + ",)";
     private PersonNameAlgorithm personNameAlgorithm;
     private PatientIdentifierAlgorithm patientIdentifierAlgorithm;
     private PersonAttributeAlgorithm personAttributeAlgorithm;
-    private PatientFingerprintAlgorithm patientFingerprintAlgorithm;
+    @Inject
+    private ServiceContext serviceContext;
+    @Inject
+    private RestAssuredService service;
 
     public PatientAlgorithm() {
         this.personNameAlgorithm = new PersonNameAlgorithm();
         this.patientIdentifierAlgorithm = new PatientIdentifierAlgorithm();
         this.personAttributeAlgorithm = new PersonAttributeAlgorithm();
-        this.patientFingerprintAlgorithm = new PatientFingerprintAlgorithm();
     }
 
     /*
@@ -48,6 +56,7 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
     @Override
     public Searchable deserialize(final String serialized) throws IOException {
         Patient patient = new Patient();
+        patient.setId(JsonUtils.readAsString(serialized, "$['id']"));
         patient.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         patient.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
         patient.setGender(JsonUtils.readAsString(serialized, "$['gender']"));
@@ -66,7 +75,13 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             patient.addattribute(
                     (PersonAttribute) personAttributeAlgorithm.deserialize(String.valueOf(attributeObject)));
         }
-        patient.setPatientFingerprint((PatientFingerprint)  patientFingerprintAlgorithm.deserialize("$['patientFingerprint']"));
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("identifier", patient.getId());
+        List<Searchable> searchableList = service.loadObjects(params, serviceContext.getResource(PATIENT_FINGERPRINT_RESOURCE));
+        for (Searchable searchable : searchableList) {
+            PatientFingerprint fingerprint = (PatientFingerprint) searchable;
+            patient.setFingerprint(fingerprint.getFingerprint());
+        }
         return patient;
     }
 
@@ -80,6 +95,7 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
     public String serialize(final Searchable object) throws IOException {
         Patient patient = (Patient) object;
         JSONObject jsonObject = new JSONObject();
+        JsonUtils.writeAsString(jsonObject, "id", patient.getId());
         JsonUtils.writeAsString(jsonObject, "uuid", patient.getUuid());
         JsonUtils.writeAsBoolean(jsonObject, "voided", patient.isVoided());
         JsonUtils.writeAsString(jsonObject, "gender", patient.getGender());
@@ -102,8 +118,7 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             attributeArray.add(JsonPath.read(name, "$"));
         }
         jsonObject.put("attributes", attributeArray);
-        String fingerprint = patientFingerprintAlgorithm.serialize(patient.getPatientFingerprint());
-        jsonObject.put("patientFingerprint", JsonPath.read(fingerprint, "$"));
         return jsonObject.toJSONString();
     }
+
 }

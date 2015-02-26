@@ -8,6 +8,7 @@
 
 package com.muzima.api.model.algorithm;
 
+import com.google.inject.Inject;
 import com.jayway.jsonpath.JsonPath;
 import com.muzima.api.model.Encounter;
 import com.muzima.api.model.EncounterType;
@@ -35,13 +36,13 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
                     ")";
 
     private PersonAlgorithm personAlgorithm;
+    @Inject
     private PatientAlgorithm patientAlgorithm;
     private LocationAlgorithm locationAlgorithm;
     private EncounterTypeAlgorithm encounterTypeAlgorithm;
 
     public EncounterAlgorithm() {
         this.personAlgorithm = new PersonAlgorithm();
-        this.patientAlgorithm = new PatientAlgorithm();
         this.locationAlgorithm = new LocationAlgorithm();
         this.encounterTypeAlgorithm = new EncounterTypeAlgorithm();
     }

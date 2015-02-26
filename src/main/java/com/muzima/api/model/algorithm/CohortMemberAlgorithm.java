@@ -8,6 +8,7 @@
 
 package com.muzima.api.model.algorithm;
 
+import com.google.inject.Inject;
 import com.jayway.jsonpath.JsonPath;
 import com.muzima.api.model.Cohort;
 import com.muzima.api.model.CohortMember;
@@ -21,11 +22,11 @@ import java.io.IOException;
 public class CohortMemberAlgorithm extends BaseOpenmrsAlgorithm {
 
     private CohortAlgorithm cohortAlgorithm;
+    @Inject
     private PatientAlgorithm patientAlgorithm;
 
     public CohortMemberAlgorithm() {
         this.cohortAlgorithm = new CohortAlgorithm();
-        this.patientAlgorithm = new PatientAlgorithm();
     }
 
     /**

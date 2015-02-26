@@ -7,6 +7,7 @@
  */
 package com.muzima.api.model.algorithm;
 
+import com.google.inject.Inject;
 import com.jayway.jsonpath.InvalidPathException;
 import com.jayway.jsonpath.JsonPath;
 import com.muzima.api.model.Cohort;
@@ -35,11 +36,11 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
 
     private final Logger logger = LoggerFactory.getLogger(CohortDataAlgorithm.class.getSimpleName());
     private CohortAlgorithm cohortAlgorithm;
+    @Inject
     private PatientAlgorithm patientAlgorithm;
 
     public CohortDataAlgorithm() {
         this.cohortAlgorithm = new CohortAlgorithm();
-        this.patientAlgorithm = new PatientAlgorithm();
     }
 
     /**

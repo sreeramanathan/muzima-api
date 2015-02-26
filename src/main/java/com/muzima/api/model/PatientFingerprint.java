@@ -4,7 +4,6 @@ import com.muzima.search.api.model.object.Searchable;
 
 public class PatientFingerprint implements Searchable {
 
-    private String id;
     private String patientId;
     private String fingerprint;
 
@@ -24,11 +23,4 @@ public class PatientFingerprint implements Searchable {
         this.fingerprint = fingerprint;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

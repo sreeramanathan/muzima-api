@@ -72,6 +72,8 @@ public class Constants {
 
     public static final String UUID_FORM_RESOURCE = "Uuid Form Resource";
 
+    public static final String PATIENT_FINGERPRINT_RESOURCE = "Patient fingerprint resource";
+
     public static final String UUID_FORM_TEMPLATE_RESOURCE = "Uuid Form Template Resource";
 
     public static final String UUID_NOTIFICATION_RESOURCE = "Uuid Notification Resource";
