@@ -56,7 +56,6 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
     @Override
     public Searchable deserialize(final String serialized) throws IOException {
         Patient patient = new Patient();
-        patient.setId(JsonUtils.readAsString(serialized, "$['id']"));
         patient.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         patient.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
         patient.setGender(JsonUtils.readAsString(serialized, "$['gender']"));
@@ -75,13 +74,7 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             patient.addattribute(
                     (PersonAttribute) personAttributeAlgorithm.deserialize(String.valueOf(attributeObject)));
         }
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("identifier", patient.getId());
-        List<Searchable> searchableList = service.loadObjects(params, serviceContext.getResource(PATIENT_FINGERPRINT_RESOURCE));
-        for (Searchable searchable : searchableList) {
-            PatientFingerprint fingerprint = (PatientFingerprint) searchable;
-            patient.setFingerprint(fingerprint.getFingerprint());
-        }
+        patient.setFingerprint(JsonUtils.readAsString(serialized, "$['fingerprint']"));
         return patient;
     }
 
@@ -95,7 +88,6 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
     public String serialize(final Searchable object) throws IOException {
         Patient patient = (Patient) object;
         JSONObject jsonObject = new JSONObject();
-        JsonUtils.writeAsString(jsonObject, "id", patient.getId());
         JsonUtils.writeAsString(jsonObject, "uuid", patient.getUuid());
         JsonUtils.writeAsBoolean(jsonObject, "voided", patient.isVoided());
         JsonUtils.writeAsString(jsonObject, "gender", patient.getGender());
@@ -118,6 +110,17 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             attributeArray.add(JsonPath.read(name, "$"));
         }
         jsonObject.put("attributes", attributeArray);
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("identifier", patient.getUuid());
+        List<Searchable> searchableList = service.loadObjects(params, serviceContext.getResource(PATIENT_FINGERPRINT_RESOURCE));
+        for (Searchable searchable : searchableList) {
+            PatientFingerprint fingerprint = (PatientFingerprint) searchable;
+            patient.setFingerprint(fingerprint.getFingerprint());
+        }
+
+        JsonUtils.writeAsString(jsonObject, "fingerprint", patient.getFingerprint());
+
         return jsonObject.toJSONString();
     }
 

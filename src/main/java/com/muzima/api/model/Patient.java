@@ -16,7 +16,6 @@ import java.util.List;
 
 public class Patient extends Person implements Comparable<Patient> {
 
-    private String id;
     private List<PatientIdentifier> identifiers;
     private List<PersonAttribute> attributes;
     private String fingerprint;
@@ -157,13 +156,5 @@ public class Patient extends Person implements Comparable<Patient> {
 
     public void setFingerprint(String fingerprint) {
         this.fingerprint = fingerprint;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
