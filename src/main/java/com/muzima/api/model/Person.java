@@ -26,6 +26,8 @@ public class Person extends OpenmrsSearchable {
     private Date birthdate;
 
     private List<PersonName> names;
+    private List<PersonAttribute> attributes;
+    private List<PersonAddress> addresses;
 
     private boolean voided;
 
@@ -132,6 +134,82 @@ public class Person extends OpenmrsSearchable {
         if (getFamilyName() == null && getGivenName() == null && getMiddleName() == null)
             return DISPLAY_NAME_FOR_ENCOUNTER_FOR_OBSERVATIONS_WITH_NULL_UUID;
         return getFamilyName() + ", " + getGivenName() + " " + getMiddleName();
+    }
+
+    public void addattribute(final PersonAttribute attribute) {
+        getAtributes().add(attribute);
+    }
+
+    public List<PersonAttribute> getAtributes() {
+        if (attributes == null) {
+            attributes = new ArrayList<PersonAttribute>();
+        }
+        return attributes;
+    }
+
+    public void setAttributes(final List<PersonAttribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    /**
+     * Get the patient attribute
+     *
+     * @return the patient attribute
+     */
+    public String getAttribute() {
+        String attribute = StringUtil.EMPTY;
+        for (PersonAttribute personAttribute : getAtributes()) {
+            attribute = personAttribute.getAttribute();
+        }
+        return attribute;
+    }
+
+    /**
+     * Gets the PersonAttribute with the given attribute type name.
+     *
+     * @param attributeName the name of the identifier type
+     * @return the PersonAttribute with the given identifier type name
+     */
+    public PersonAttribute getAttribute(String attributeName) {
+        for (PersonAttribute attribute : getAtributes()) {
+            if (attribute.getAttributeType().getName().equals(attributeName)) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+
+    public void setAddresses(List<PersonAddress> addresses){
+        this.addresses = addresses;
+    }
+
+    public void addAddress(PersonAddress address){
+        getAddresses().add(address);
+    }
+
+    public List<PersonAddress> getAddresses(){
+        if(addresses == null){
+            return new ArrayList<PersonAddress>();
+        }
+        return addresses;
+    }
+
+    public PersonAddress getAddress(String uuid){
+        for (PersonAddress address: addresses){
+            if(StringUtil.equals(uuid,address.getUuid())){
+                return address;
+            }
+        }
+        return null;
+    }
+
+    public PersonAddress getPreferredAddress(){
+        for (PersonAddress address: addresses){
+            if(address.isPreferred()){
+                return address;
+            }
+        }
+        return null;
     }
 
     public boolean isVoided() {

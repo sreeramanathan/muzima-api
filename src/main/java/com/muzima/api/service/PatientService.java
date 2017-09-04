@@ -10,6 +10,8 @@ package com.muzima.api.service;
 import com.google.inject.ImplementedBy;
 import com.muzima.api.model.CohortMember;
 import com.muzima.api.model.Patient;
+import com.muzima.api.model.PatientIdentifierType;
+import com.muzima.api.model.PersonAttributeType;
 import com.muzima.api.service.impl.PatientServiceImpl;
 import org.apache.lucene.queryParser.ParseException;
 
@@ -223,4 +225,13 @@ public interface PatientService extends MuzimaInterface {
     List<Patient> getPatientsNotInCohorts() throws IOException;
 
     List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers);
+
+    List<PatientIdentifierType> getAllPatientIdentifierTypes() throws IOException;
+
+    List<PatientIdentifierType> getPatientIdentifierTypeByName(String name) throws IOException;
+
+    PatientIdentifierType getPatientIdentifierTypeByUuid(String uuid) throws IOException;
+    List<PersonAttributeType> getAllPersonAttributeTypes() throws IOException;
+    List<PersonAttributeType> getPersonAttributeTypeByName(String name) throws IOException;
+    PersonAttributeType getPersonAttributeTypeByUuid(String uuid) throws IOException;
 }
