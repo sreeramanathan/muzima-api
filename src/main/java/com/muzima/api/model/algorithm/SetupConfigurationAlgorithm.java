@@ -13,6 +13,7 @@ public class SetupConfigurationAlgorithm  extends BaseOpenmrsAlgorithm {
 
     @Override
     public Searchable deserialize(final String serialized) throws IOException {
+
         SetupConfiguration configuration = new SetupConfiguration();
         configuration.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         configuration.setName(JsonUtils.readAsString(serialized, "$['name']"));
