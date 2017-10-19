@@ -50,7 +50,7 @@ public class MuzimaSettingServiceImpl implements MuzimaSettingService {
     public MuzimaSetting downloadSettingByProperty(final String property) throws IOException{
         MuzimaSetting setting = null;
         Map<String, String> parameter = new HashMap<String, String>() {{
-            put("q", property);
+            put("property", property);
         }};
         List<MuzimaSetting> settings = dao.download(parameter, Constants.SEARCH_MUZIMA_SETTING_RESOURCE);
 

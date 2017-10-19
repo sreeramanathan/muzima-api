@@ -12,8 +12,6 @@ public class MuzimaSettingAlgorithm extends BaseOpenmrsAlgorithm {
     public static final String STANDARD_SETTING_REPRESENTATION = "(uuid,name,description,valueBoolean,valueString,property,settingDataType,retired)";
     @Override
     public Searchable deserialize(final String serialized) throws IOException {
-
-        System.out.println("MuzimaSettingAlgorithm: "+serialized);
         MuzimaSetting muzimaSetting = new MuzimaSetting();
         muzimaSetting.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         muzimaSetting.setName(JsonUtils.readAsString(serialized, "$['name']"));
