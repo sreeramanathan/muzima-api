@@ -12,7 +12,7 @@ public class SetupConfigurationTemplateAlgorithm  extends BaseOpenmrsAlgorithm {
     public static final String SETUP_CONFIGURATION_TEMPLATE_STANDARD_REPRESENTATION = "(uuid,configJson)";
 
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         SetupConfigurationTemplate setupConfigurationTemplate = new SetupConfigurationTemplate();
         setupConfigurationTemplate.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         setupConfigurationTemplate.setConfigJson(JsonUtils.readAsString(serialized, "$['configJson']"));
@@ -20,7 +20,7 @@ public class SetupConfigurationTemplateAlgorithm  extends BaseOpenmrsAlgorithm {
     }
 
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         SetupConfigurationTemplate setupConfigurationTemplate = (SetupConfigurationTemplate)object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", setupConfigurationTemplate.getUuid());

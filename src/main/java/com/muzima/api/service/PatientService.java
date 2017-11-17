@@ -224,7 +224,7 @@ public interface PatientService extends MuzimaInterface {
      */
     List<Patient> getPatientsNotInCohorts() throws IOException;
 
-    List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers);
+    List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers) throws IOException;
 
     List<PatientIdentifierType> getAllPatientIdentifierTypes() throws IOException;
 

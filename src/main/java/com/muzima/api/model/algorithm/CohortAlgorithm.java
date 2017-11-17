@@ -26,12 +26,14 @@ public class CohortAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Cohort cohort = new Cohort();
         cohort.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
-        cohort.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
-        cohort.setName(JsonUtils.readAsString(serialized, "$['name']"));
-        cohort.setDynamic(JsonUtils.readAsBoolean(serialized, "$['dynamic']"));
+        if(isFullSerialization) {
+            cohort.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
+            cohort.setName(JsonUtils.readAsString(serialized, "$['name']"));
+            cohort.setDynamic(JsonUtils.readAsBoolean(serialized, "$['dynamic']"));
+        }
         return cohort;
     }
 
@@ -42,13 +44,15 @@ public class CohortAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Cohort cohort = (Cohort) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", cohort.getUuid());
-        JsonUtils.writeAsBoolean(jsonObject, "voided", cohort.isVoided());
-        JsonUtils.writeAsString(jsonObject, "name", cohort.getName());
-        JsonUtils.writeAsBoolean(jsonObject, "dynamic", cohort.isDynamic());
+        if(isFullSerialization) {
+            JsonUtils.writeAsBoolean(jsonObject, "voided", cohort.isVoided());
+            JsonUtils.writeAsString(jsonObject, "name", cohort.getName());
+            JsonUtils.writeAsBoolean(jsonObject, "dynamic", cohort.isDynamic());
+        }
         return jsonObject.toJSONString();
     }
 }

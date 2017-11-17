@@ -29,7 +29,7 @@ public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         EncounterType encounterType = new EncounterType();
         encounterType.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         encounterType.setName(JsonUtils.readAsString(serialized, "$['name']"));
@@ -43,7 +43,7 @@ public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         EncounterType encounterType = (EncounterType) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", encounterType.getUuid());

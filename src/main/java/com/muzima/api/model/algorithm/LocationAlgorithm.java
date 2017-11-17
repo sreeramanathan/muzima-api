@@ -29,7 +29,7 @@ public class LocationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Location location = new Location();
         location.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         location.setName(JsonUtils.readAsString(serialized, "$['name']"));
@@ -44,7 +44,7 @@ public class LocationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Location location = (Location) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", location.getUuid());

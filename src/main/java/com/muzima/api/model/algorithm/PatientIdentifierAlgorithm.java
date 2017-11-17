@@ -35,14 +35,14 @@ public class PatientIdentifierAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete observation object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         PatientIdentifier patientIdentifier = new PatientIdentifier();
         patientIdentifier.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         patientIdentifier.setIdentifier(JsonUtils.readAsString(serialized, "$['identifier']"));
         patientIdentifier.setPreferred(JsonUtils.readAsBoolean(serialized, "$['preferred']"));
         Object identifierTypeObject = JsonUtils.readAsObject(serialized, "$['identifierType']");
         PatientIdentifierType identifierType =
-                (PatientIdentifierType) patientIdentifierTypeAlgorithm.deserialize(String.valueOf(identifierTypeObject));
+                (PatientIdentifierType) patientIdentifierTypeAlgorithm.deserialize(String.valueOf(identifierTypeObject), true);
         patientIdentifier.setIdentifierType(identifierType);
         return patientIdentifier;
     }
@@ -54,13 +54,13 @@ public class PatientIdentifierAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         PatientIdentifier patientIdentifier = (PatientIdentifier) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", patientIdentifier.getUuid());
         JsonUtils.writeAsString(jsonObject, "identifier", patientIdentifier.getIdentifier());
         JsonUtils.writeAsBoolean(jsonObject, "preferred", patientIdentifier.isPreferred());
-        String identifierType = patientIdentifierTypeAlgorithm.serialize(patientIdentifier.getIdentifierType());
+        String identifierType = patientIdentifierTypeAlgorithm.serialize(patientIdentifier.getIdentifierType(), true);
         jsonObject.put("identifierType", JsonPath.read(identifierType, "$"));
         return jsonObject.toJSONString();
     }

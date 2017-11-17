@@ -13,7 +13,7 @@ public class ProviderAlgorithm extends BaseOpenmrsAlgorithm {
     public static final String PROVIDER_STANDARD_REPRESENTATION = "(uuid,name,id,identifier)";
 
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Provider provider = new Provider();
         provider.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         provider.setName(JsonUtils.readAsString(serialized, "$['name']"));
@@ -23,7 +23,7 @@ public class ProviderAlgorithm extends BaseOpenmrsAlgorithm {
     }
 
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Provider provider = (Provider) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", provider.getUuid());

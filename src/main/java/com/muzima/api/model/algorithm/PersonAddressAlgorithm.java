@@ -13,7 +13,7 @@ public class PersonAddressAlgorithm extends BaseOpenmrsAlgorithm {
             "startDate,endDate,latitude,longitude,voided)";
 
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         PersonAddress personAddress = new PersonAddress();
         personAddress.setAddress1(JsonUtils.readAsString(serialized, "$['address1']"));
         personAddress.setAddress2(JsonUtils.readAsString(serialized, "$['address2']"));
@@ -36,7 +36,7 @@ public class PersonAddressAlgorithm extends BaseOpenmrsAlgorithm {
     }
 
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         PersonAddress personAddress = (PersonAddress) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "address1", personAddress.getAddress1());

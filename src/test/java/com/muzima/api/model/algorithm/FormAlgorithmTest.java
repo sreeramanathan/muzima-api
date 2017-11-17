@@ -45,19 +45,19 @@ public class FormAlgorithmTest {
 
     @Test
     public void deserialize_shouldReadNameFromJson() throws IOException {
-        Form form = (Form) formAlgorithm.deserialize(jsonForm);
+        Form form = (Form) formAlgorithm.deserialize(jsonForm, true);
         assertThat(form.getName(), is("PMTCT Form"));
     }
 
     @Test
     public void deserialize_shouldReadDescriptionFromJson() throws IOException {
-        Form form = (Form) formAlgorithm.deserialize(jsonForm);
+        Form form = (Form) formAlgorithm.deserialize(jsonForm, true);
         assertThat(form.getDescription(), is("Form for PMTCT registration"));
     }
 
     @Test
     public void deserialize_shouldReadTagsFromJson() throws IOException {
-        Form form = (Form) formAlgorithm.deserialize(jsonForm);
+        Form form = (Form) formAlgorithm.deserialize(jsonForm, true);
         assertThat(form.getTags().length, is(3));
 
         assertThat(form.getTags()[0].getName(), is("visit"));
@@ -74,7 +74,7 @@ public class FormAlgorithmTest {
     public void serialize_shouldSerializeNameToJson() throws IOException {
         Form form = buildForm();
 
-        String formJson = formAlgorithm.serialize(form);
+        String formJson = formAlgorithm.serialize(form, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         assertThat((String) JsonPath.read(jsonObject, "name"), is("PMTCT"));
@@ -84,7 +84,7 @@ public class FormAlgorithmTest {
     public void serialize_shouldSerializeUUIDToJson() throws IOException {
         Form form = buildForm();
 
-        String formJson = formAlgorithm.serialize(form);
+        String formJson = formAlgorithm.serialize(form, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         assertThat((String) JsonPath.read(jsonObject, "uuid"), is("uuid"));
@@ -94,7 +94,7 @@ public class FormAlgorithmTest {
     public void serialize_shouldSerializeDescriptionToJson() throws IOException {
         Form form = buildForm();
 
-        String formJson = formAlgorithm.serialize(form);
+        String formJson = formAlgorithm.serialize(form, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         assertThat((String) JsonPath.read(jsonObject, "description"), is("Form Description"));
@@ -104,7 +104,7 @@ public class FormAlgorithmTest {
     public void serialize_shouldSerializeVersionToJson() throws IOException {
         Form form = buildForm();
 
-        String formJson = formAlgorithm.serialize(form);
+        String formJson = formAlgorithm.serialize(form, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         assertThat((String) JsonPath.read(jsonObject, "version"), is("1.0"));
@@ -114,7 +114,7 @@ public class FormAlgorithmTest {
     public void serialize_shouldSerializeTagsToJson() throws IOException {
         Form form = buildForm();
 
-        String formJson = formAlgorithm.serialize(form);
+        String formJson = formAlgorithm.serialize(form, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         Tag[] tags = readTags(jsonObject);

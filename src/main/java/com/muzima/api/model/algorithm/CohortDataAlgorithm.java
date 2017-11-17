@@ -36,6 +36,7 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
     private final Logger logger = LoggerFactory.getLogger(CohortDataAlgorithm.class.getSimpleName());
     private CohortAlgorithm cohortAlgorithm;
     private PatientAlgorithm patientAlgorithm;
+    private boolean fullDeserialization;
 
     public CohortDataAlgorithm() {
         this.cohortAlgorithm = new CohortAlgorithm();
@@ -49,7 +50,8 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean fullDeserialization) throws IOException {
+        this.fullDeserialization = fullDeserialization;
         CohortData cohortData = new CohortData();
         try {
             processStaticCohortDataObject(cohortData, serialized);
@@ -67,7 +69,7 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
         Cohort cohort = new Cohort();
         List<Object> cohortObjects = JsonPath.read(serialized, "$['results'][*]['cohort']");
         for (Object cohortObject : cohortObjects) {
-            cohort = (Cohort) cohortAlgorithm.deserialize(String.valueOf(cohortObject));
+            cohort = (Cohort) cohortAlgorithm.deserialize(String.valueOf(cohortObject), this.fullDeserialization);
             if (!StringUtil.isEmpty(cohort.getUuid()) && !StringUtil.isEmpty(cohort.getName())) {
                 break;
             }
@@ -77,7 +79,7 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
 
         List<Object> patientObjects = JsonPath.read(serialized, "$['results'][*]['patient']");
         for (Object patientObject : patientObjects) {
-            Patient patient = (Patient) patientAlgorithm.deserialize(String.valueOf(patientObject));
+            Patient patient = (Patient) patientAlgorithm.deserialize(String.valueOf(patientObject), this.fullDeserialization);
             cohortData.addCohortMember(new CohortMember(cohort, patient));
             cohortData.addPatient(patient);
         }
@@ -85,13 +87,13 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
 
     private void processDynamicCohortDataObject(final CohortData cohortData, final String serialized) throws IOException {
         Object definitionObject = JsonPath.read(serialized, "$['definition']");
-        Cohort cohort = (Cohort) cohortAlgorithm.deserialize(String.valueOf(definitionObject));
+        Cohort cohort = (Cohort) cohortAlgorithm.deserialize(String.valueOf(definitionObject), this.fullDeserialization);
         cohort.setDynamic(true);
         cohortData.setCohort(cohort);
 
         List<Object> patientObjects = JsonPath.read(serialized, "$['members']");
         for (Object patientObject : patientObjects) {
-            Patient patient = (Patient) patientAlgorithm.deserialize(String.valueOf(patientObject));
+            Patient patient = (Patient) patientAlgorithm.deserialize(String.valueOf(patientObject), this.fullDeserialization);
             cohortData.addCohortMember(new CohortMember(cohort, patient));
             cohortData.addPatient(patient);
         }
@@ -104,7 +106,7 @@ public class CohortDataAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         throw new IOException("Serializing the cohort data object is not supported right now!");
     }
 }

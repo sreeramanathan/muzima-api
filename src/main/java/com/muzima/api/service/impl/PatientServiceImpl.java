@@ -313,10 +313,12 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers) {
+    public List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers) throws IOException {
         List<Patient> patients = new ArrayList<Patient>();
         for (CohortMember member : cohortMembers) {
-            patients.add(member.getPatient());
+            Patient patient = member.getPatient();
+            if (patient != null)
+                patients.add(getPatientByUuid(patient.getUuid()));
         }
         return sortDisplayNameAscending(patients);
     }

@@ -53,25 +53,27 @@ public class ObservationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete observation object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Observation observation = new Observation();
         observation.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
-        observation.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
-        observation.setObservationDatetime(JsonUtils.readAsDateTime(serialized, "$['obsDatetime']"));
-        // values, ignored when they are not exists in the resource
-        observation.setValueText(JsonUtils.readAsString(serialized, "$['valueText']"));
-        observation.setValueNumeric(JsonUtils.readAsNumeric(serialized, "$['valueNumeric']"));
-        observation.setValueDatetime(JsonUtils.readAsDateTime(serialized, "$['valueDatetime']"));
-        // value coded need to be handled separately because we can't create the custom structure of value coded!
-        Object valueCodedObject = JsonUtils.readAsObject(serialized, "$['valueCoded']");
-        observation.setValueCoded((Concept) conceptAlgorithm.deserialize(String.valueOf(valueCodedObject)));
-        // some observation might not have the encounter associated with it!
-        Object encounterObject = JsonUtils.readAsObject(serialized, "$['encounter']");
-        observation.setEncounter((Encounter) encounterAlgorithm.deserialize(String.valueOf(encounterObject)));
-        Object conceptObject = JsonUtils.readAsObject(serialized, "$['concept']");
-        observation.setConcept((Concept) conceptAlgorithm.deserialize(String.valueOf(conceptObject)));
-        Object personObject = JsonUtils.readAsObject(serialized, "$['person']");
-        observation.setPerson((Person) personAlgorithm.deserialize(String.valueOf(personObject)));
+        if(isFullSerialization) {
+            observation.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
+            observation.setObservationDatetime(JsonUtils.readAsDateTime(serialized, "$['obsDatetime']"));
+            // values, ignored when they are not exists in the resource
+            observation.setValueText(JsonUtils.readAsString(serialized, "$['valueText']"));
+            observation.setValueNumeric(JsonUtils.readAsNumeric(serialized, "$['valueNumeric']"));
+            observation.setValueDatetime(JsonUtils.readAsDateTime(serialized, "$['valueDatetime']"));
+            // value coded need to be handled separately because we can't create the custom structure of value coded!
+            Object valueCodedObject = JsonUtils.readAsObject(serialized, "$['valueCoded']");
+            observation.setValueCoded((Concept) conceptAlgorithm.deserialize(String.valueOf(valueCodedObject), true));
+            // some observation might not have the encounter associated with it!
+            Object encounterObject = JsonUtils.readAsObject(serialized, "$['encounter']");
+            observation.setEncounter((Encounter) encounterAlgorithm.deserialize(String.valueOf(encounterObject), false));
+            Object conceptObject = JsonUtils.readAsObject(serialized, "$['concept']");
+            observation.setConcept((Concept) conceptAlgorithm.deserialize(String.valueOf(conceptObject), false));
+            Object personObject = JsonUtils.readAsObject(serialized, "$['person']");
+            observation.setPerson((Person) personAlgorithm.deserialize(String.valueOf(personObject), false));
+        }
         return observation;
     }
 
@@ -82,23 +84,25 @@ public class ObservationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Observation observation = (Observation) object;
         JSONObject jsonObject = new JSONObject();
-        JsonUtils.writeAsBoolean(jsonObject, "voided", observation.isVoided());
         JsonUtils.writeAsString(jsonObject, "uuid", observation.getUuid());
-        JsonUtils.writeAsDateTime(jsonObject, "obsDatetime", observation.getObservationDatetime());
-        JsonUtils.writeAsString(jsonObject, "valueText", observation.getValueText());
-        JsonUtils.writeAsNumeric(jsonObject, "valueNumeric", observation.getValueNumeric());
-        JsonUtils.writeAsDateTime(jsonObject, "valueDatetime", observation.getValueDatetime());
-        String valueCoded = conceptAlgorithm.serialize(observation.getValueCoded());
-        jsonObject.put("valueCoded", JsonPath.read(valueCoded, "$"));
-        String encounter = encounterAlgorithm.serialize(observation.getEncounter());
-        jsonObject.put("encounter", JsonPath.read(encounter, "$"));
-        String concept = conceptAlgorithm.serialize(observation.getConcept());
-        jsonObject.put("concept", JsonPath.read(concept, "$"));
-        String person = personAlgorithm.serialize(observation.getPerson());
-        jsonObject.put("person", JsonPath.read(person, "$"));
+        if(isFullSerialization) {
+            JsonUtils.writeAsBoolean(jsonObject, "voided", observation.isVoided());
+            JsonUtils.writeAsDateTime(jsonObject, "obsDatetime", observation.getObservationDatetime());
+            JsonUtils.writeAsString(jsonObject, "valueText", observation.getValueText());
+            JsonUtils.writeAsNumeric(jsonObject, "valueNumeric", observation.getValueNumeric());
+            JsonUtils.writeAsDateTime(jsonObject, "valueDatetime", observation.getValueDatetime());
+            String valueCoded = conceptAlgorithm.serialize(observation.getValueCoded(), true);
+            jsonObject.put("valueCoded", JsonPath.read(valueCoded, "$"));
+            String encounter = encounterAlgorithm.serialize(observation.getEncounter(),false);
+            jsonObject.put("encounter", JsonPath.read(encounter, "$"));
+            String concept = conceptAlgorithm.serialize(observation.getConcept(), false);
+            jsonObject.put("concept", JsonPath.read(concept, "$"));
+            String person = personAlgorithm.serialize(observation.getPerson(), false);
+            jsonObject.put("person", JsonPath.read(person, "$"));
+        }
         return jsonObject.toJSONString();
     }
 }
