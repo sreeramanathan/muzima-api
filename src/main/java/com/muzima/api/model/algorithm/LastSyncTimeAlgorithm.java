@@ -21,7 +21,7 @@ public class LastSyncTimeAlgorithm extends BaseOpenmrsAlgorithm {
     public static final String STANDARD_LAST_SYNC_TIME_REPRESENTATION = "(uuid,apiName,paramSignature,lastSyncDate)";
 
     @Override
-    public Searchable deserialize(String serialized) throws IOException {
+    public Searchable deserialize(String serialized, final boolean isFullSerialization) throws IOException {
         LastSyncTime lastSyncTime = new LastSyncTime();
         lastSyncTime.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         lastSyncTime.setApiName(getAPIName(JsonUtils.readAsString(serialized, "$['apiName']")));
@@ -31,7 +31,7 @@ public class LastSyncTimeAlgorithm extends BaseOpenmrsAlgorithm {
     }
 
     @Override
-    public String serialize(Searchable object) throws IOException {
+    public String serialize(Searchable object, final boolean isFullSerialization) throws IOException {
         LastSyncTime lastSyncTime = (LastSyncTime) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", lastSyncTime.getUuid());

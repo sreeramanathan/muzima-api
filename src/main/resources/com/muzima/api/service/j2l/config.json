@@ -562,6 +562,32 @@
             "field.searchable": {
                 "uuid": "$['uuid']"
             }
+        },
+        {
+            "resource.name": "Uuid Muzima Setting Resource",
+            "node.root": "$",
+            "resource.object": "com.muzima.api.model.MuzimaSetting",
+            "algorithm.class": "com.muzima.api.model.algorithm.MuzimaSettingAlgorithm",
+            "resolver.class": "com.muzima.api.model.resolver.UuidMuzimaSettingResolver",
+            "field.unique": "uuid",
+            "field.searchable": {
+                "uuid": "$['uuid']",
+                "name": "$['name']",
+                "property": "$['property']"
+            }
+        },
+        {
+            "resource.name": "Search Muzima Setting Resource",
+            "node.root": "$['results']",
+            "resource.object": "com.muzima.api.model.MuzimaSetting",
+            "algorithm.class": "com.muzima.api.model.algorithm.MuzimaSettingAlgorithm",
+            "resolver.class": "com.muzima.api.model.resolver.SearchMuzimaSettingResolver",
+            "field.unique": "uuid",
+            "field.searchable": {
+                "uuid": "$['uuid']",
+                "name": "$['name']",
+                "property": "$['property']"
+            }
         }
     ]
 }

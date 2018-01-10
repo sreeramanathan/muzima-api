@@ -24,7 +24,7 @@ public class FormTemplateAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String json) throws IOException {
+    public Searchable deserialize(final String json, final boolean isFullSerialization) throws IOException {
         FormTemplate formTemplate = new FormTemplate();
 
         Object jsonObject = JsonPath.read(json, "$");
@@ -54,7 +54,7 @@ public class FormTemplateAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         FormTemplate formTemplate = (FormTemplate) object;
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("html", formTemplate.getHtml());

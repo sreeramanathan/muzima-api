@@ -53,20 +53,22 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Encounter encounter = new Encounter();
         encounter.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
-        encounter.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
-        encounter.setEncounterDatetime(JsonUtils.readAsDateTime(serialized, "$['encounterDatetime']"));
-        encounter.setFormDataUuid(JsonUtils.readAsString(serialized, "$['formDataUuid']"));
-        Object patientObject = JsonUtils.readAsObject(serialized, "$['patient']");
-        encounter.setPatient((Patient) patientAlgorithm.deserialize(String.valueOf(patientObject)));
-        Object providerObject = JsonUtils.readAsObject(serialized, "$['provider']");
-        encounter.setProvider((Person) personAlgorithm.deserialize(String.valueOf(providerObject)));
-        Object locationObject = JsonUtils.readAsObject(serialized, "$['location']");
-        encounter.setLocation((Location) locationAlgorithm.deserialize(String.valueOf(locationObject)));
-        Object encounterTypeObject = JsonUtils.readAsObject(serialized, "$['encounterType']");
-        encounter.setEncounterType((EncounterType) encounterTypeAlgorithm.deserialize(String.valueOf(encounterTypeObject)));
+        if(isFullSerialization) {
+            encounter.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
+            encounter.setEncounterDatetime(JsonUtils.readAsDateTime(serialized, "$['encounterDatetime']"));
+            encounter.setFormDataUuid(JsonUtils.readAsString(serialized, "$['formDataUuid']"));
+            Object patientObject = JsonUtils.readAsObject(serialized, "$['patient']");
+            encounter.setPatient((Patient) patientAlgorithm.deserialize(String.valueOf(patientObject), isFullSerialization));
+            Object providerObject = JsonUtils.readAsObject(serialized, "$['provider']");
+            encounter.setProvider((Person) personAlgorithm.deserialize(String.valueOf(providerObject), isFullSerialization));
+            Object locationObject = JsonUtils.readAsObject(serialized, "$['location']");
+            encounter.setLocation((Location) locationAlgorithm.deserialize(String.valueOf(locationObject), isFullSerialization));
+            Object encounterTypeObject = JsonUtils.readAsObject(serialized, "$['encounterType']");
+            encounter.setEncounterType((EncounterType) encounterTypeAlgorithm.deserialize(String.valueOf(encounterTypeObject), isFullSerialization));
+        }
         return encounter;
     }
 
@@ -77,21 +79,23 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Encounter encounter = (Encounter) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", encounter.getUuid());
-        JsonUtils.writeAsString(jsonObject, "formDataUuid", encounter.getFormDataUuid());
-        JsonUtils.writeAsBoolean(jsonObject, "voided", encounter.isVoided());
-        JsonUtils.writeAsDateTime(jsonObject, "encounterDatetime", encounter.getEncounterDatetime());
-        String patient = patientAlgorithm.serialize(encounter.getPatient());
-        jsonObject.put("patient", JsonPath.read(patient, "$"));
-        String provider = personAlgorithm.serialize(encounter.getProvider());
-        jsonObject.put("provider", JsonPath.read(provider, "$"));
-        String location = locationAlgorithm.serialize(encounter.getLocation());
-        jsonObject.put("location", JsonPath.read(location, "$"));
-        String encounterType = encounterTypeAlgorithm.serialize(encounter.getEncounterType());
-        jsonObject.put("encounterType", JsonPath.read(encounterType, "$"));
+        if(isFullSerialization) {
+            JsonUtils.writeAsString(jsonObject, "formDataUuid", encounter.getFormDataUuid());
+            JsonUtils.writeAsBoolean(jsonObject, "voided", encounter.isVoided());
+            JsonUtils.writeAsDateTime(jsonObject, "encounterDatetime", encounter.getEncounterDatetime());
+            String patient = patientAlgorithm.serialize(encounter.getPatient(), isFullSerialization);
+            jsonObject.put("patient", JsonPath.read(patient, "$"));
+            String provider = personAlgorithm.serialize(encounter.getProvider(), isFullSerialization);
+            jsonObject.put("provider", JsonPath.read(provider, "$"));
+            String location = locationAlgorithm.serialize(encounter.getLocation(), isFullSerialization);
+            jsonObject.put("location", JsonPath.read(location, "$"));
+            String encounterType = encounterTypeAlgorithm.serialize(encounter.getEncounterType(), isFullSerialization);
+            jsonObject.put("encounterType", JsonPath.read(encounterType, "$"));
+        }
         return jsonObject.toJSONString();
     }
 }

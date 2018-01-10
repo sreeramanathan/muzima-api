@@ -30,7 +30,7 @@ public class FormAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete observation object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
 
 
         Form form = new Form();
@@ -60,7 +60,7 @@ public class FormAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         // serialize the minimum needed to identify an object for deletion purposes.
         Form form = (Form) object;
         JSONObject jsonObject = new JSONObject();

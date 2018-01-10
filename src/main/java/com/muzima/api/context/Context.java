@@ -18,6 +18,7 @@ import com.muzima.api.service.FormService;
 import com.muzima.api.service.LastSyncTimeService;
 import com.muzima.api.service.LocationService;
 import com.muzima.api.service.MuzimaInterface;
+import com.muzima.api.service.MuzimaSettingService;
 import com.muzima.api.service.ObservationService;
 import com.muzima.api.service.PatientService;
 import com.muzima.api.service.SetupConfigurationService;
@@ -380,5 +381,15 @@ public class Context {
      */
     public SetupConfigurationService getSetupConfigurationService() throws IOException {
         return getService(SetupConfigurationService.class);
+    }
+
+    /**
+     * Get the setttings service to perform operation related to the MuzimaSetting object.
+     *
+     * @return the settings service class.
+     * @throws IOException when the system unable to find the correct service object.
+     */
+    public MuzimaSettingService getMuzimaSettingService() throws IOException {
+        return getService(MuzimaSettingService.class);
     }
 }

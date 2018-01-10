@@ -144,4 +144,13 @@ public class Constants {
     public static final String UUID_SETUP_CONFIGURATION_TEMPLATE_RESOURCE = "Uuid Setup Configuration Template Resource";
 
     public static final String SEARCH_SETUP_CONFIGURATION_TEMPLATE_RESOURCE = "Search Setup Configuration Template Resource";
+
+    public static final String UUID_MUZIMA_SETTING_RESOURCE = "Uuid Muzima Setting Resource";
+
+    public static final String SEARCH_MUZIMA_SETTING_RESOURCE = "Search Muzima Setting Resource";
+
+    public static final class ServerSettings{
+        public static final String PATIENT_IDENTIFIER_AUTOGENERATTION_SETTING = "PatientIdentifier.AutoGeneration";
+        public static final Boolean PATIENT_IDENTIFIER_AUTOGENERATTION_SETTING_DEFAULT_VALUE = true;
+    }
 }

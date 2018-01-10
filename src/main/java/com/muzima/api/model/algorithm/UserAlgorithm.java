@@ -46,12 +46,12 @@ public class UserAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String json) throws IOException {
+    public Searchable deserialize(final String json, final boolean isFullSerialization) throws IOException {
         User user = new User();
         user.setUuid(JsonUtils.readAsString(json, "$['uuid']"));
         // read the person object
         Object personObject = JsonUtils.readAsObject(json, "$['person']");
-        user.setPerson((Person) personAlgorithm.deserialize(String.valueOf(personObject)));
+        user.setPerson((Person) personAlgorithm.deserialize(String.valueOf(personObject), isFullSerialization));
 
         String username;
         username = JsonUtils.readAsString(json, "$['username']");
@@ -63,14 +63,14 @@ public class UserAlgorithm extends BaseOpenmrsAlgorithm {
         List<Object> privilegeObjectArray = JsonUtils.readAsObjectList(json, "$['privileges']");
         List<Privilege> privileges = new ArrayList<Privilege>();
         for (Object privilegeObject : privilegeObjectArray) {
-            privileges.add((Privilege) privilegeAlgorithm.deserialize(String.valueOf(privilegeObject)));
+            privileges.add((Privilege) privilegeAlgorithm.deserialize(String.valueOf(privilegeObject), isFullSerialization));
         }
         user.setPrivileges(privileges);
 
         List<Object> roleObjectArray = JsonUtils.readAsObjectList(json, "$['roles']");
         List<Role> roles = new ArrayList<Role>();
         for (Object roleObject : roleObjectArray) {
-            roles.add((Role) roleAlgorithm.deserialize(String.valueOf(roleObject)));
+            roles.add((Role) roleAlgorithm.deserialize(String.valueOf(roleObject), isFullSerialization));
         }
         user.setRoles(roles);
 
@@ -84,7 +84,7 @@ public class UserAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         User user = (User) object;
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("uuid", user.getUuid());
@@ -96,19 +96,19 @@ public class UserAlgorithm extends BaseOpenmrsAlgorithm {
 
         JSONArray privilegeArray = new JSONArray();
         for (Privilege privilege : user.getPrivileges()) {
-            String privilegeString = privilegeAlgorithm.serialize(privilege);
+            String privilegeString = privilegeAlgorithm.serialize(privilege, isFullSerialization);
             privilegeArray.add(JsonPath.read(privilegeString, "$"));
         }
         jsonObject.put("privileges", privilegeArray);
 
         JSONArray roleArray = new JSONArray();
         for (Role role : user.getRoles()) {
-            String roleString = roleAlgorithm.serialize(role);
+            String roleString = roleAlgorithm.serialize(role, isFullSerialization);
             roleArray.add(JsonPath.read(roleString, "$"));
         }
         jsonObject.put("roles", roleArray);
 
-        jsonObject.put("person", personAlgorithm.serialize(user.getPerson()));
+        jsonObject.put("person", personAlgorithm.serialize(user.getPerson(), isFullSerialization));
 
         return jsonObject.toJSONString();
     }

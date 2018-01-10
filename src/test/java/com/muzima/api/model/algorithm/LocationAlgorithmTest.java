@@ -45,13 +45,13 @@ public class LocationAlgorithmTest {
 
     @Test
     public void deserialize_shouldReadNameFromJson() throws IOException {
-        Location location = (Location) locationAlgorithm.deserialize(jsonLocation);
+        Location location = (Location) locationAlgorithm.deserialize(jsonLocation, true);
         assertThat(location.getName(), is("ABC Town"));
     }
 
     @Test
     public void deserialize_shouldReadUUIDFromJson() throws IOException {
-        Location location = (Location) locationAlgorithm.deserialize(jsonLocation);
+        Location location = (Location) locationAlgorithm.deserialize(jsonLocation, true);
         assertThat(location.getUuid(),is("0ca78602-737f-408d-8ced-386ad12abcdb"));
     }
 
@@ -59,7 +59,7 @@ public class LocationAlgorithmTest {
     public void serialize_shouldSerializeNameToJson() throws IOException {
         Location location = buildLocation();
 
-        String formJson = locationAlgorithm.serialize(location);
+        String formJson = locationAlgorithm.serialize(location, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         assertThat((String) JsonPath.read(jsonObject, "name"), is("QWERTY Town"));
@@ -69,7 +69,7 @@ public class LocationAlgorithmTest {
     public void serialize_shouldSerializeUUIDToJson() throws IOException {
         Location location = buildLocation();
 
-        String formJson = locationAlgorithm.serialize(location);
+        String formJson = locationAlgorithm.serialize(location, true);
 
         Object jsonObject = JsonPath.read(formJson, "$");
         assertThat((String) JsonPath.read(jsonObject, "uuid"), is("uuid"));

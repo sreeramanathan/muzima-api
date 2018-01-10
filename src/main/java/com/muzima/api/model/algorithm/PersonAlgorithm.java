@@ -37,14 +37,16 @@ public class PersonAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete observation object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Person person = new Person();
         person.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
-        person.setGender(JsonUtils.readAsString(serialized, "$['gender']"));
-        person.setBirthdate(JsonUtils.readAsDate(serialized, "$['birthdate']"));
-        List<Object> personNameObjects = JsonUtils.readAsObjectList(serialized, "$['names']");
-        for (Object personNameObject : personNameObjects) {
-            person.addName((PersonName) personNameAlgorithm.deserialize(String.valueOf(personNameObject)));
+        if(isFullSerialization) {
+            person.setGender(JsonUtils.readAsString(serialized, "$['gender']"));
+            person.setBirthdate(JsonUtils.readAsDate(serialized, "$['birthdate']"));
+            List<Object> personNameObjects = JsonUtils.readAsObjectList(serialized, "$['names']");
+            for (Object personNameObject : personNameObjects) {
+                person.addName((PersonName) personNameAlgorithm.deserialize(String.valueOf(personNameObject), isFullSerialization));
+            }
         }
         return person;
     }
@@ -56,18 +58,20 @@ public class PersonAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Person person = (Person) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", person.getUuid());
-        JsonUtils.writeAsString(jsonObject, "gender", person.getGender());
-        JsonUtils.writeAsDate(jsonObject, "birthdate", person.getBirthdate());
-        JSONArray nameArray = new JSONArray();
-        for (PersonName personName : person.getNames()) {
-            String name = personNameAlgorithm.serialize(personName);
-            nameArray.add(JsonPath.read(name, "$"));
+        if(isFullSerialization) {
+            JsonUtils.writeAsString(jsonObject, "gender", person.getGender());
+            JsonUtils.writeAsDate(jsonObject, "birthdate", person.getBirthdate());
+            JSONArray nameArray = new JSONArray();
+            for (PersonName personName : person.getNames()) {
+                String name = personNameAlgorithm.serialize(personName, isFullSerialization);
+                nameArray.add(JsonPath.read(name, "$"));
+            }
+            jsonObject.put("names", nameArray);
         }
-        jsonObject.put("names", nameArray);
         return jsonObject.toJSONString();
     }
 }

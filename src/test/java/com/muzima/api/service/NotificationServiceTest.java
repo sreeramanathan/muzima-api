@@ -144,9 +144,7 @@ public class NotificationServiceTest {
     public void saveNotifications_shouldSaveNotificationsToLocalDataRepository() throws Exception {
         List<Notification> notifications = notificationService.getNotificationByReceiver(receiverUuid);
         int notificationCounter = notifications.size();
-        System.out.println("notificationCounter = " + notificationCounter);
         dynamicNotifications = notificationService.downloadNotificationByReceiver(receiverUuid);
-        System.out.println("Downloaded notifications = " + dynamicNotifications.size());
         notificationService.saveNotifications(dynamicNotifications);
         assertThat(notificationCounter + dynamicNotifications.size(), equalTo(1));
 
