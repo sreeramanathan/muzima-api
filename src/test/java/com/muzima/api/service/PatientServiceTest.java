@@ -107,7 +107,7 @@ public class PatientServiceTest {
         String partialName = name.substring(0, name.length() - 1);
         List<Patient> downloadedPatients = patientService.downloadPatientsByName(partialName);
         for (Patient downloadedPatient : downloadedPatients) {
-            assertThat(downloadedPatient.getFamilyName(), containsString(partialName));
+            assertThat(downloadedPatient.getDisplayName(), containsString(partialName));
         }
     }
 
@@ -171,10 +171,8 @@ public class PatientServiceTest {
         }
         patientService.updatePatients(savedPatients);
         List<Patient> updatedPatients = patientService.getAllPatients();
+        assertThat(updatedPatients.size(), equalTo(patients.size()));
         for (Patient updatedPatient : updatedPatients) {
-            for (Patient cohort : patients) {
-                assertThat(updatedPatient.getUuid(), equalTo(cohort.getUuid()));
-            }
             assertThat(updatedPatient.getGender(), containsString("New Gender For Patient"));
         }
     }
