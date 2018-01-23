@@ -29,6 +29,8 @@ public class Concept extends OpenmrsSearchable implements Comparable<Concept> {
 
     private String unit;
 
+    private int id;
+
     private boolean precise;
 
     private ConceptType conceptType;
@@ -72,6 +74,14 @@ public class Concept extends OpenmrsSearchable implements Comparable<Concept> {
 
     public void setConceptNames(final List<ConceptName> conceptNames) {
         this.conceptNames = conceptNames;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

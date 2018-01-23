@@ -326,6 +326,7 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
+                "concept_id": "$['concept_id']",
                 "name": "$['names'][*]['name']"
             }
         },
@@ -338,6 +339,7 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
+                "concept_id": "$['concept_id']",
                 "name": "$['names'][*]['name']"
             }
         },
@@ -350,6 +352,7 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
+                "concept_id": "$['concept_id']",
                 "name": "$['names'][*]['name']"
             }
         },
@@ -362,6 +365,7 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
+                "concept_id": "$['concept_id']",
                 "name": "$['names'][*]['name']"
             }
         },
@@ -374,6 +378,7 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
+                "encounter_id" : "$['encounter_id']",
                 "patientUuid": "$['patient']['uuid']",
                 "formDataUuid": "$['formDataUuid']"
             }
@@ -387,6 +392,7 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
+                "encounter_id" : "$['encounter_id']",
                 "patientUuid": "$['patient']['uuid']",
                 "formDataUuid": "$['formDataUuid']"
             }

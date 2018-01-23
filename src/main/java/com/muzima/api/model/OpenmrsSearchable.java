@@ -21,6 +21,8 @@ public abstract class OpenmrsSearchable implements Searchable, Serializable {
 
     private String uuid;
 
+    private String id;
+
     /**
      * Get the openmrs object's uri.
      *

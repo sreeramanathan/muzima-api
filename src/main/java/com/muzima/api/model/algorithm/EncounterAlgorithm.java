@@ -25,9 +25,9 @@ import java.io.IOException;
  */
 public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String ENCOUNTER_SIMPLE_REPRESENTATION = "(uuid,uuid)";
+    public static final String ENCOUNTER_SIMPLE_REPRESENTATION = "(uuid,uuid,id)";
     public static final String ENCOUNTER_STANDARD_REPRESENTATION =
-            "(uuid,voided,encounterDatetime," +
+            "(uuid,voided,encounterDatetime,id" +
                     "provider:" + PersonAlgorithm.PERSON_STANDARD_REPRESENTATION + "," +
                     "location:" + LocationAlgorithm.LOCATION_STANDARD_REPRESENTATION + "," +
                     "encounterType:" + EncounterTypeAlgorithm.ENCOUNTER_TYPE_STANDARD_REPRESENTATION + "," +
@@ -56,6 +56,7 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
     public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Encounter encounter = new Encounter();
         encounter.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
+        encounter.setId(JsonUtils.readAsInteger(serialized, "$['id']"));
         if(isFullSerialization) {
             encounter.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
             encounter.setEncounterDatetime(JsonUtils.readAsDateTime(serialized, "$['encounterDatetime']"));
@@ -83,6 +84,7 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
         Encounter encounter = (Encounter) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", encounter.getUuid());
+        JsonUtils.writeAsInteger(jsonObject, "id", encounter.getId());
         if(isFullSerialization) {
             JsonUtils.writeAsString(jsonObject, "formDataUuid", encounter.getFormDataUuid());
             JsonUtils.writeAsBoolean(jsonObject, "voided", encounter.isVoided());
