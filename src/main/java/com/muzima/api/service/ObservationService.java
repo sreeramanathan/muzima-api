@@ -132,10 +132,17 @@ public interface ObservationService extends MuzimaInterface {
     List<Observation> getObservationsByPatientAndConcept(final String patientUuid,
                                                          final String conceptUuid) throws IOException;
 
+    List<Observation> getObservationsByPatientAndConcept(final String patientUuid,
+                                                         final int conceptId) throws IOException;
+
     List<Observation> getObservationsByPatientAndConcept(final Patient patient,
                                                          final Concept concept) throws IOException;
+
     List<Observation> getObservationsByEncounter(final String encounterUuid) throws IOException;
 
+    List<Observation> getObservationsByEncounter(final int encounterId) throws IOException;
+
+    List<Observation> getObservationsByEncounterType(final int encounterTypeId,final String patientUuid) throws IOException;
     /**
      * @param concept
      * @return List of Observations for the given Concept

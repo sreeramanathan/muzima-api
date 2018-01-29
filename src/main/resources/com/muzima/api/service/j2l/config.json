@@ -326,8 +326,8 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
-                "concept_id": "$['concept_id']",
-                "name": "$['names'][*]['name']"
+                "name": "$['names'][*]['name']",
+                "id": "$['id']"
             }
         },
         {
@@ -339,8 +339,8 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
-                "concept_id": "$['concept_id']",
-                "name": "$['names'][*]['name']"
+                "name": "$['names'][*]['name']",
+                "id": "$['id']"
             }
         },
         {
@@ -352,8 +352,8 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
-                "concept_id": "$['concept_id']",
-                "name": "$['names'][*]['name']"
+                "name": "$['names'][*]['name']",
+                "id": "$['id']"
             }
         },
         {
@@ -365,8 +365,8 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
-                "concept_id": "$['concept_id']",
-                "name": "$['names'][*]['name']"
+                "name": "$['names'][*]['name']",
+                "id": "$['id']"
             }
         },
         {
@@ -378,9 +378,12 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
-                "encounter_id" : "$['encounter_id']",
                 "patientUuid": "$['patient']['uuid']",
-                "formDataUuid": "$['formDataUuid']"
+                "formDataUuid": "$['formDataUuid']",
+                "id": "$['id']",
+                "encounterTypeName": "$['encounterType']['name']",
+                "encounterTypeUuid": "$['encounterType']['uuid']",
+                "encouterTypeId": "$['encounterType'][id]"
             }
         },
         {
@@ -392,7 +395,6 @@
             "field.unique": "uuid",
             "field.searchable": {
                 "uuid": "$['uuid']",
-                "encounter_id" : "$['encounter_id']",
                 "patientUuid": "$['patient']['uuid']",
                 "formDataUuid": "$['formDataUuid']"
             }
@@ -409,7 +411,9 @@
                 "patientUuid": "$['person.uuid']",
                 "conceptUuid": "$['concept.uuid']",
                 "conceptName": "$['concept.name.name']",
-                "encounterUuid": "$['encounter']['uuid']"
+                "encounterUuid": "$['encounter']['uuid']",
+                "conceptId": "$['concept']['id']",
+                "encounterId": "$['encounter']['id']"
             }
         },
         {
@@ -424,7 +428,9 @@
                 "patientUuid": "$['person.uuid']",
                 "conceptUuid": "$['concept.uuid']",
                 "conceptName": "$['concept.name.name']",
-                "encounterUuid": "$['encounter']['uuid']"
+                "encounterUuid": "$['encounter']['uuid']",
+                "conceptId": "$['concept']['id']",
+                "encounterId": "$['encounter']['id']"
             }
         },
         {
@@ -438,7 +444,9 @@
                 "uuid": "$['uuid']",
                 "patientUuid": "$['person']['uuid']",
                 "conceptUuid": "$['concept']['uuid']",
-                "encounterUuid": "$['encounter']['uuid']"
+                "encounterUuid": "$['encounter']['uuid']",
+                "conceptId": "$['concept']['id']",
+                "encounterId": "$['encounter']['id']"
             }
         },
         {

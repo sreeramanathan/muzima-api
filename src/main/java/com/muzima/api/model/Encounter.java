@@ -31,14 +31,6 @@ public class Encounter extends OpenmrsSearchable {
 
     private int id;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getFormDataUuid() {
         return formDataUuid;
     }
@@ -94,4 +86,8 @@ public class Encounter extends OpenmrsSearchable {
     public void setVoided(final boolean voided) {
         this.voided = voided;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 }

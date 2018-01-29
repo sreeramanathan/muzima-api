@@ -19,19 +19,20 @@ import net.minidev.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.lang.System;
 
 /**
  * TODO: Write brief description about the class here.
  */
 public class ConceptAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String CONCEPT_SIMPLE_REPRESENTATION = "(uuid)";
+    public static final String CONCEPT_SIMPLE_REPRESENTATION = "(uuid,id)";
     public static final String CONCEPT_STANDARD_REPRESENTATION =
-            "(uuid," +
+            "(uuid,id," +
                     "datatype:" + ConceptTypeAlgorithm.CONCEPT_TYPE_STANDARD_REPRESENTATION + "," +
                     "names:" + ConceptNameAlgorithm.CONCEPT_NAME_STANDARD_REPRESENTATION + ",uuid,id)";
     public static final String CONCEPT_NUMERIC_STANDARD_REPRESENTATION =
-            "(uuid,units,precise," +
+            "(uuid,units,precise,id," +
                     "datatype:" + ConceptTypeAlgorithm.CONCEPT_TYPE_STANDARD_REPRESENTATION + "," +
                     "names:" + ConceptNameAlgorithm.CONCEPT_NAME_STANDARD_REPRESENTATION + ",uuid,id)";
 

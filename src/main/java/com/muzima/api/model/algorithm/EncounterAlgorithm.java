@@ -17,6 +17,7 @@ import com.muzima.api.model.Person;
 import com.muzima.search.api.model.object.Searchable;
 import com.muzima.util.JsonUtils;
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
 
 import java.io.IOException;
 
@@ -27,12 +28,12 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
 
     public static final String ENCOUNTER_SIMPLE_REPRESENTATION = "(uuid,uuid,id)";
     public static final String ENCOUNTER_STANDARD_REPRESENTATION =
-            "(uuid,voided,encounterDatetime,id" +
+            "(uuid,voided,encounterDatetime,id," +
                     "provider:" + PersonAlgorithm.PERSON_STANDARD_REPRESENTATION + "," +
                     "location:" + LocationAlgorithm.LOCATION_STANDARD_REPRESENTATION + "," +
                     "encounterType:" + EncounterTypeAlgorithm.ENCOUNTER_TYPE_STANDARD_REPRESENTATION + "," +
                     "patient:" + PatientAlgorithm.PATIENT_SIMPLE_REPRESENTATION +
-                    ")";
+                    ",uuid)";
 
     private PersonAlgorithm personAlgorithm;
     private PatientAlgorithm patientAlgorithm;
@@ -55,7 +56,8 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
     @Override
     public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Encounter encounter = new Encounter();
-        encounter.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
+        String uuid = JsonUtils.readAsString(serialized, "$['uuid']");
+        encounter.setUuid(uuid);
         encounter.setId(JsonUtils.readAsInteger(serialized, "$['id']"));
         if(isFullSerialization) {
             encounter.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));

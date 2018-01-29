@@ -338,6 +338,27 @@ public class ObservationServiceImpl implements ObservationService {
     public List<Observation> getObservationsByPatientAndConcept(final String patientUuid, final String conceptUuid) throws IOException {
         return observationDao.get(patientUuid, conceptUuid);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByPatientAndConcept(String, int)
+     */
+    @Override
+    public List<Observation> getObservationsByPatientAndConcept(final String patientUuid, final int conceptId) throws IOException {
+        return observationDao.get(patientUuid, conceptId);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByEncounter(int)
+     */
+    @Override
+    public List<Observation> getObservationsByEncounter(final int encounterId) throws IOException {
+        return observationDao.get(encounterId);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -347,6 +368,16 @@ public class ObservationServiceImpl implements ObservationService {
     public List<Observation> getObservationsByEncounter(final String encounterUuid) throws IOException {
         List<Observation> obs = observationDao.get(null, null ,encounterUuid);
         return obs;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByEncounterType(int,String)
+     */
+    @Override
+    public List<Observation> getObservationsByEncounterType(final int encounterTypeId,final String patientUuid) throws IOException {
+        return observationDao.get(encounterTypeId,patientUuid);
     }
 
 

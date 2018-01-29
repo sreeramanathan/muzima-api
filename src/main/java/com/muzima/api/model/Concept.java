@@ -76,14 +76,6 @@ public class Concept extends OpenmrsSearchable implements Comparable<Concept> {
         this.conceptNames = conceptNames;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         String name = StringUtil.EMPTY;
         for (ConceptName conceptName : getConceptNames()) {
@@ -158,4 +150,8 @@ public class Concept extends OpenmrsSearchable implements Comparable<Concept> {
     public boolean isCreatedOnDevice() {
         return getUuid().startsWith(Constants.CONCEPT_CREATED_ON_PHONE);
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 }

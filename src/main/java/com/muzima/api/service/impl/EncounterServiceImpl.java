@@ -10,14 +10,17 @@ package com.muzima.api.service.impl;
 
 import com.google.inject.Inject;
 import com.muzima.api.dao.EncounterDao;
+import com.muzima.api.dao.EncounterTypeDao;
 import com.muzima.api.dao.PatientDao;
 import com.muzima.api.model.Encounter;
+import com.muzima.api.model.EncounterType;
 import com.muzima.api.model.Patient;
 import com.muzima.api.service.EncounterService;
 import com.muzima.search.api.util.CollectionUtil;
 import com.muzima.util.Constants;
 import com.muzima.util.DateUtils;
 import org.apache.lucene.queryParser.ParseException;
+import java.lang.System;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +39,9 @@ public class EncounterServiceImpl implements EncounterService {
 
     @Inject
     private EncounterDao encounterDao;
+
+    @Inject
+    private EncounterTypeDao encounterTypeDao;
 
     protected EncounterServiceImpl() {
     }
@@ -344,4 +350,46 @@ public class EncounterServiceImpl implements EncounterService {
     public void deleteAll() throws IOException {
         encounterDao.delete(encounterDao.getAll(), Constants.UUID_ENCOUNTER_RESOURCE);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getAllEncounterTypes()
+     */
+    @Override
+    public List<EncounterType> getAllEncounterTypes() throws IOException {
+        return encounterTypeDao.getAll();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getAllEncounterByEncounterTypeNameAndPatientUUid(String name,String patientUuid)
+     */
+    @Override
+    public List<Encounter> getAllEncounterByEncounterTypeNameAndPatientUUid(final String name,final String patientUuid) throws IOException {
+        return encounterDao.getAllEncounterByEncounterTypeNameAndPatientUUid(name,patientUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getAllEncounterByEncounterTypeUuidAndPatientUUid(String encounterTypeUuid,String patientUuid)
+     */
+    @Override
+    public List<Encounter> getAllEncounterByEncounterTypeUuidAndPatientUUid(final String encounterTypeUuid,final String patientUuid) throws IOException {
+        return encounterDao.getAllEncounterByEncounterTypeUuidAndPatientUUid(encounterTypeUuid,patientUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getAllEncounterByEncounterTypeIdAndPatientUUid(int encounterTypeId,String patientUuid)
+     */
+    @Override
+    public List<Encounter> getAllEncounterByEncounterTypeIdAndPatientUUid(final int encounterTypeId,final String patientUuid) throws IOException {
+        return encounterDao.getAllEncounterByEncounterTypeIdAndPatientUUid(encounterTypeId,patientUuid);
+    }
+
+
 }

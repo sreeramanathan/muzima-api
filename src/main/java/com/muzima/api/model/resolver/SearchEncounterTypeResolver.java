@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014. The Trustees of Indiana University.
+ * Copyright (c) 2018. The Trustees of Indiana University.
  *
  * This version of the code is licensed under the MPL 2.0 Open Source license with additional
  * healthcare disclaimer. If the user is an entity intending to commercialize any application
@@ -8,7 +8,7 @@
 
 package com.muzima.api.model.resolver;
 
-import com.muzima.api.model.algorithm.ConceptAlgorithm;
+import com.muzima.api.model.algorithm.EncounterTypeAlgorithm;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -17,10 +17,10 @@ import java.util.Map;
 /**
  * TODO: Write brief description about the class here.
  */
-public class SearchConceptResolver extends BaseOpenmrsResolver {
 
-    public static final String REPRESENTATION =
-            "?v=custom:" + ConceptAlgorithm.CONCEPT_STANDARD_REPRESENTATION;
+public class SearchEncounterTypeResolver extends BaseOpenmrsResolver {
+    private static final String REPRESENTATION =
+            "?v=custom:" + EncounterTypeAlgorithm.ENCOUNTER_TYPE_STANDARD_REPRESENTATION;
 
     /**
      * Return the full REST resource based on the parameters passed to the method.
@@ -34,7 +34,6 @@ public class SearchConceptResolver extends BaseOpenmrsResolver {
         for (String key : resourceParams.keySet()) {
             paramBuilder.append("&").append(key).append("=").append(URLEncoder.encode(resourceParams.get(key), "UTF-8"));
         }
-        String url=getConfiguration().getServer() + "/ws/rest/v1/muzima/concept" + REPRESENTATION + paramBuilder.toString();
-        return url;
+        return getConfiguration().getServer() + "/ws/rest/v1/muzima/encounterTypes" + REPRESENTATION + paramBuilder.toString();
     }
 }
