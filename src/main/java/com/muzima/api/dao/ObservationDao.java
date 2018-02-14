@@ -28,6 +28,17 @@ public interface ObservationDao extends OpenmrsDao<Observation> {
      * @throws IOException when search api unable to process the resource.
      */
     List<Observation> get(final String patientUuid, final String conceptUuid) throws IOException;
+
+    /**
+     * Search observations for patient with matching uuid of the question.
+     *
+     * @param patientUuid the uuid of the patient.
+     * @param conceptId the id of the question of the observations.
+     * @return all observations for the patient with question matching the search term.
+     * @throws IOException when search api unable to process the resource.
+     */
+    List<Observation> get(final String patientUuid, final int conceptId) throws IOException;
+
     /**
      * Search observations for patient with matching uuid of the question.
      *
@@ -47,4 +58,24 @@ public interface ObservationDao extends OpenmrsDao<Observation> {
     List<Observation> get(final Concept concept) throws IOException;
 
     List<Observation> get(final String formDataUuid) throws IOException;
+
+    /**
+     * Search observations for patient with matching encounterId of the question.
+     *
+     * @param encounterId the id of the question of the observations.
+     * @return all observations for the patient with question matching the search term.
+     * @throws IOException when search api unable to process the resource.
+     */
+    List<Observation> get(final int encounterId) throws IOException;
+
+    /**
+     * Search observations for patient with matching uuid of the question.
+     *
+     * @param patientUuid the uuid of the patient.
+     * @param encounterTypeId the id of the question of the observations.
+     * @return all observations for the patient with question and encounter matching the search term.
+     * @throws IOException when search api unable to process the resource.
+     */
+    List<Observation> get(final int encounterTypeId,String patientUuid) throws IOException;
+
 }

@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String ENCOUNTER_TYPE_STANDARD_REPRESENTATION = "(uuid,name)";
+    public static final String ENCOUNTER_TYPE_STANDARD_REPRESENTATION = "(uuid,name,id)";
 
     /**
      * Implementation of this method will define how the object will be serialized from the String representation.
@@ -33,6 +33,7 @@ public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
         EncounterType encounterType = new EncounterType();
         encounterType.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         encounterType.setName(JsonUtils.readAsString(serialized, "$['name']"));
+        encounterType.setId(JsonUtils.readAsInteger(serialized, "$[id]"));
         return encounterType;
     }
 
@@ -48,6 +49,7 @@ public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", encounterType.getUuid());
         JsonUtils.writeAsString(jsonObject, "name", encounterType.getName());
+        JsonUtils.writeAsInteger(jsonObject,"id", encounterType.getId());
         return jsonObject.toJSONString();
     }
 }

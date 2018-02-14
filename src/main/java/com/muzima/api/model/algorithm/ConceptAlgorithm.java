@@ -19,21 +19,22 @@ import net.minidev.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+import java.lang.System;
 
 /**
  * TODO: Write brief description about the class here.
  */
 public class ConceptAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String CONCEPT_SIMPLE_REPRESENTATION = "(uuid)";
+    public static final String CONCEPT_SIMPLE_REPRESENTATION = "(uuid,id)";
     public static final String CONCEPT_STANDARD_REPRESENTATION =
-            "(uuid," +
+            "(uuid,id," +
                     "datatype:" + ConceptTypeAlgorithm.CONCEPT_TYPE_STANDARD_REPRESENTATION + "," +
-                    "names:" + ConceptNameAlgorithm.CONCEPT_NAME_STANDARD_REPRESENTATION + ",uuid)";
+                    "names:" + ConceptNameAlgorithm.CONCEPT_NAME_STANDARD_REPRESENTATION + ",uuid,id)";
     public static final String CONCEPT_NUMERIC_STANDARD_REPRESENTATION =
-            "(uuid,units,precise," +
+            "(uuid,units,precise,id," +
                     "datatype:" + ConceptTypeAlgorithm.CONCEPT_TYPE_STANDARD_REPRESENTATION + "," +
-                    "names:" + ConceptNameAlgorithm.CONCEPT_NAME_STANDARD_REPRESENTATION + ",uuid)";
+                    "names:" + ConceptNameAlgorithm.CONCEPT_NAME_STANDARD_REPRESENTATION + ",uuid,id)";
 
     private ConceptTypeAlgorithm conceptTypeAlgorithm;
     private ConceptNameAlgorithm conceptNameAlgorithm;
@@ -53,6 +54,7 @@ public class ConceptAlgorithm extends BaseOpenmrsAlgorithm {
     public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Concept concept = new Concept();
         concept.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
+        concept.setId(JsonUtils.readAsInteger(serialized, "$['id']"));
         if(isFullSerialization) {
             concept.setUnit(JsonUtils.readAsString(serialized, "$['units']"));
             concept.setPrecise(JsonUtils.readAsBoolean(serialized, "$['precise']"));
@@ -63,7 +65,7 @@ public class ConceptAlgorithm extends BaseOpenmrsAlgorithm {
                 concept.addName((ConceptName) conceptNameAlgorithm.deserialize(String.valueOf(conceptNameObject), isFullSerialization));
             }
         }
-        return concept;
+        return concept; 
     }
 
     /**
@@ -77,6 +79,7 @@ public class ConceptAlgorithm extends BaseOpenmrsAlgorithm {
         Concept concept = (Concept) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", concept.getUuid());
+        JsonUtils.writeAsInteger(jsonObject, "id", concept.getId());
         if(isFullSerialization) {
             JsonUtils.writeAsString(jsonObject, "units", concept.getUnit());
             JsonUtils.writeAsBoolean(jsonObject, "precise", concept.isPrecise());

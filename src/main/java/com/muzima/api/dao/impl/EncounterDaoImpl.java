@@ -65,4 +65,64 @@ public class EncounterDaoImpl extends OpenmrsDaoImpl<Encounter> implements Encou
         }
         return service.countObjects(filters, daoClass);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see EncounterDao#getEncountersByEncounterTypeNameAndPatientUuid(String,String)
+     */
+    @Override
+    public List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(filter);
+        }
+        if (!StringUtil.isEmpty(name)) {
+            Filter filter = FilterFactory.createFilter("encounterTypeName", name);
+            filters.add(filter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see EncounterDao#getEncountersByEncounterTypeUuidAndPatientUuid(String,String)
+     */
+    @Override
+    public List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(filter);
+        }
+
+        if (!StringUtil.isEmpty(encounterTypeUuid)) {
+            Filter filter = FilterFactory.createFilter("encounterTypeUuid", encounterTypeUuid);
+            filters.add(filter);
+        }
+
+        return service.getObjects(filters, daoClass);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see EncounterDao#getEncountersByEncounterTypeIdAndPatientUuid(int,String)
+     */
+    @Override
+    public List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(filter);
+        }
+        if (!StringUtil.isEmpty(Integer.toString(encounterTypeId))) {
+            Filter filter = FilterFactory.createFilter("encounterTypeId", Integer.toString(encounterTypeId));
+            filters.add(filter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
 }

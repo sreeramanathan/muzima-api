@@ -26,6 +26,7 @@ public class Form extends OpenmrsSearchable implements Comparable<Form> {
 
     private boolean retired;
 
+    private EncounterType encounterType;
     /**
      * Get the name for the form.
      *
@@ -121,4 +122,13 @@ public class Form extends OpenmrsSearchable implements Comparable<Form> {
         }
         return 0;
     }
+
+    public EncounterType getEncounterType() {
+        return encounterType;
+    }
+
+    public void setEncounterType(EncounterType encounterType) {
+        this.encounterType = encounterType;
+    }
+
 }

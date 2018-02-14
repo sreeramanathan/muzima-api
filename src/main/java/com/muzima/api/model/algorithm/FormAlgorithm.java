@@ -8,6 +8,8 @@
 
 package com.muzima.api.model.algorithm;
 
+import com.jayway.jsonpath.JsonPath;
+import com.muzima.api.model.EncounterType;
 import com.muzima.api.model.Form;
 import com.muzima.api.model.Tag;
 import com.muzima.search.api.model.object.Searchable;
@@ -21,7 +23,10 @@ import java.util.List;
 
 public class FormAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String STANDARD_FORM_REPRESENTATION = "(uuid,name,discriminator,description,tags:(uuid,name),retired)";
+    public static final String STANDARD_FORM_REPRESENTATION = "(uuid,name,discriminator,description,tags:(uuid,name),retired,"+"encounterType:" + EncounterTypeAlgorithm.ENCOUNTER_TYPE_STANDARD_REPRESENTATION + ")";
+
+    private EncounterTypeAlgorithm encounterTypeAlgorithm;
+    public FormAlgorithm(){ this.encounterTypeAlgorithm = new EncounterTypeAlgorithm(); }
 
     /**
      * Implementation of this method will define how the observation will be serialized from the JSON representation.
@@ -39,6 +44,8 @@ public class FormAlgorithm extends BaseOpenmrsAlgorithm {
         form.setRetired(JsonUtils.readAsBoolean(serialized, "$['retired']"));
         form.setDescription(JsonUtils.readAsString(serialized, "$['description']"));
         form.setDiscriminator(JsonUtils.readAsString(serialized, "$['discriminator']"));
+        Object encounterTypeObject = JsonUtils.readAsObject(serialized, "$['encounterType']");
+        form.setEncounterType((EncounterType) encounterTypeAlgorithm.deserialize(String.valueOf(encounterTypeObject), isFullSerialization));
         List<Object> objects = JsonUtils.readAsObjectList(serialized, "$['tags']");
         List<Tag> formTags = new ArrayList<Tag>();
         for (Object tagObject : objects) {
@@ -70,6 +77,8 @@ public class FormAlgorithm extends BaseOpenmrsAlgorithm {
         JsonUtils.writeAsString(jsonObject, "description", form.getDescription());
         JsonUtils.writeAsString(jsonObject, "discriminator", form.getDiscriminator());
         JsonUtils.writeAsString(jsonObject, "version", form.getVersion());
+        String encounterType = encounterTypeAlgorithm.serialize(form.getEncounterType(), isFullSerialization);
+        jsonObject.put("encounterType", JsonPath.read(encounterType, "$"));
         jsonObject.put("tags", readTagsToJsonArray(form));
         return jsonObject.toJSONString();
     }

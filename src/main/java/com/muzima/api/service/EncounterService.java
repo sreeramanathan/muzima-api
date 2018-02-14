@@ -10,6 +10,7 @@ package com.muzima.api.service;
 
 import com.google.inject.ImplementedBy;
 import com.muzima.api.model.Encounter;
+import com.muzima.api.model.EncounterType;
 import com.muzima.api.model.Patient;
 import com.muzima.api.service.impl.EncounterServiceImpl;
 import org.apache.lucene.queryParser.ParseException;
@@ -216,4 +217,42 @@ public interface EncounterService extends MuzimaInterface {
      * @should delete all the encounters from local data repository.
      */
     void deleteAll() throws IOException;
+
+    /**
+     * Get all encounter types from the local data repository.
+     *
+     * @throws java.io.IOException when the search api unable to process the resource.
+     * @should get all the encounter Types from local data repository.
+     */
+    List<EncounterType> getAllEncounterTypes() throws IOException;
+
+    /**
+     * Get list of encounters from the local data repository.
+     *
+     * @param name the encounter type name.
+     * @param patientUuid
+     * @throws java.io.IOException when the search api unable to process the resource.
+     * @should get list of encounters from local data repository.
+     */
+    List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException;
+
+    /**
+     * Get list of encounters from the local data repository.
+     *
+     * @param encounterTypeUuid the encounter type name.
+     * @param patientUuid
+     * @throws java.io.IOException when the search api unable to process the resource.
+     * @should get list of encounters from local data repository.
+     */
+    List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException;
+
+    /**
+     * Get list of encounters from the local data repository.
+     *
+     * @param encounterTypeId the encounter type name.
+     * @param patientUuid
+     * @throws java.io.IOException when the search api unable to process the resource.
+     * @should get list of encounters from local data repository.
+     */
+    List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException;
 }
