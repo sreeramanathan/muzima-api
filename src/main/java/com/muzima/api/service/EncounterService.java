@@ -234,7 +234,7 @@ public interface EncounterService extends MuzimaInterface {
      * @throws java.io.IOException when the search api unable to process the resource.
      * @should get list of encounters from local data repository.
      */
-    List<Encounter> getAllEncounterByEncounterTypeNameAndPatientUUid(final String name,final String patientUuid) throws IOException;
+    List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException;
 
     /**
      * Get list of encounters from the local data repository.
@@ -244,7 +244,7 @@ public interface EncounterService extends MuzimaInterface {
      * @throws java.io.IOException when the search api unable to process the resource.
      * @should get list of encounters from local data repository.
      */
-    List<Encounter> getAllEncounterByEncounterTypeUuidAndPatientUUid(final String encounterTypeUuid,final String patientUuid) throws IOException;
+    List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException;
 
     /**
      * Get list of encounters from the local data repository.
@@ -254,5 +254,5 @@ public interface EncounterService extends MuzimaInterface {
      * @throws java.io.IOException when the search api unable to process the resource.
      * @should get list of encounters from local data repository.
      */
-    List<Encounter> getAllEncounterByEncounterTypeIdAndPatientUUid(final int encounterTypeId,final String patientUuid) throws IOException;
+    List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException;
 }

@@ -364,31 +364,31 @@ public class EncounterServiceImpl implements EncounterService {
     /**
      * {@inheritDoc}
      *
-     * @see com.muzima.api.service.EncounterService#getAllEncounterByEncounterTypeNameAndPatientUUid(String name,String patientUuid)
+     * @see com.muzima.api.service.EncounterService#getEncountersByEncounterTypeNameAndPatientUuid(String name,String patientUuid)
      */
     @Override
-    public List<Encounter> getAllEncounterByEncounterTypeNameAndPatientUUid(final String name,final String patientUuid) throws IOException {
-        return encounterDao.getAllEncounterByEncounterTypeNameAndPatientUUid(name,patientUuid);
+    public List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException {
+        return encounterDao.getEncountersByEncounterTypeNameAndPatientUuid(name,patientUuid);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see com.muzima.api.service.EncounterService#getAllEncounterByEncounterTypeUuidAndPatientUUid(String encounterTypeUuid,String patientUuid)
+     * @see com.muzima.api.service.EncounterService#getEncountersByEncounterTypeUuidAndPatientUuid(String encounterTypeUuid,String patientUuid)
      */
     @Override
-    public List<Encounter> getAllEncounterByEncounterTypeUuidAndPatientUUid(final String encounterTypeUuid,final String patientUuid) throws IOException {
-        return encounterDao.getAllEncounterByEncounterTypeUuidAndPatientUUid(encounterTypeUuid,patientUuid);
+    public List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException {
+        return encounterDao.getEncountersByEncounterTypeUuidAndPatientUuid(encounterTypeUuid,patientUuid);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see com.muzima.api.service.EncounterService#getAllEncounterByEncounterTypeIdAndPatientUUid(int encounterTypeId,String patientUuid)
+     * @see com.muzima.api.service.EncounterService#getEncountersByEncounterTypeIdAndPatientUuid(int encounterTypeId,String patientUuid)
      */
     @Override
-    public List<Encounter> getAllEncounterByEncounterTypeIdAndPatientUUid(final int encounterTypeId,final String patientUuid) throws IOException {
-        return encounterDao.getAllEncounterByEncounterTypeIdAndPatientUUid(encounterTypeId,patientUuid);
+    public List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException {
+        return encounterDao.getEncountersByEncounterTypeIdAndPatientUuid(encounterTypeId,patientUuid);
     }
 
 

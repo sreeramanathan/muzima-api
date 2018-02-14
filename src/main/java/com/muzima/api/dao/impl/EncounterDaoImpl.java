@@ -69,10 +69,10 @@ public class EncounterDaoImpl extends OpenmrsDaoImpl<Encounter> implements Encou
     /**
      * {@inheritDoc}
      *
-     * @see EncounterDao#getAllEncounterByEncounterTypeNameAndPatientUUid(String,String)
+     * @see EncounterDao#getEncountersByEncounterTypeNameAndPatientUuid(String,String)
      */
     @Override
-    public List<Encounter> getAllEncounterByEncounterTypeNameAndPatientUUid(final String name,final String patientUuid) throws IOException {
+    public List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException {
         List<Filter> filters = new ArrayList<Filter>();
         if (!StringUtil.isEmpty(patientUuid)) {
             Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);
@@ -88,10 +88,10 @@ public class EncounterDaoImpl extends OpenmrsDaoImpl<Encounter> implements Encou
     /**
      * {@inheritDoc}
      *
-     * @see EncounterDao#getAllEncounterByEncounterTypeUuidAndPatientUUid(String,String)
+     * @see EncounterDao#getEncountersByEncounterTypeUuidAndPatientUuid(String,String)
      */
     @Override
-    public List<Encounter> getAllEncounterByEncounterTypeUuidAndPatientUUid(final String encounterTypeUuid,final String patientUuid) throws IOException {
+    public List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException {
         List<Filter> filters = new ArrayList<Filter>();
         if (!StringUtil.isEmpty(patientUuid)) {
             Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);
@@ -110,10 +110,10 @@ public class EncounterDaoImpl extends OpenmrsDaoImpl<Encounter> implements Encou
     /**
      * {@inheritDoc}
      *
-     * @see EncounterDao#getAllEncounterByEncounterTypeIdAndPatientUUid(int,String)
+     * @see EncounterDao#getEncountersByEncounterTypeIdAndPatientUuid(int,String)
      */
     @Override
-    public List<Encounter> getAllEncounterByEncounterTypeIdAndPatientUUid(final int encounterTypeId,final String patientUuid) throws IOException {
+    public List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException {
         List<Filter> filters = new ArrayList<Filter>();
         if (!StringUtil.isEmpty(patientUuid)) {
             Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);

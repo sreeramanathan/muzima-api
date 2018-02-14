@@ -57,7 +57,7 @@ public interface EncounterDao extends OpenmrsDao<Encounter> {
      * @return list of encounters for the patient.
      * @throws java.io.IOException when the search api unable to process the resource.
      */
-    List<Encounter> getAllEncounterByEncounterTypeNameAndPatientUUid(final String name,final String patientUuid) throws IOException;
+    List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException;
 
     /**
      * Get list of encounters for particular patient given encounter type Uuid.
@@ -67,7 +67,7 @@ public interface EncounterDao extends OpenmrsDao<Encounter> {
      * @return list of encounters for the patient.
      * @throws java.io.IOException when the search api unable to process the resource.
      */
-    List<Encounter> getAllEncounterByEncounterTypeUuidAndPatientUUid(final String encounterTypeUuid,final String patientUuid) throws IOException;
+    List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException;
 
 
     /**
@@ -78,7 +78,7 @@ public interface EncounterDao extends OpenmrsDao<Encounter> {
      * @return list of encounters for the patient.
      * @throws java.io.IOException when the search api unable to process the resource.
      */
-    List<Encounter> getAllEncounterByEncounterTypeIdAndPatientUUid(final int encounterTypeId,final String patientUuid) throws IOException;
+    List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException;
 
 
 }
