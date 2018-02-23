@@ -33,7 +33,7 @@ public class EncounterAlgorithm extends BaseOpenmrsAlgorithm {
                     "location:" + LocationAlgorithm.LOCATION_STANDARD_REPRESENTATION + "," +
                     "encounterType:" + EncounterTypeAlgorithm.ENCOUNTER_TYPE_STANDARD_REPRESENTATION + "," +
                     "patient:" + PatientAlgorithm.PATIENT_SIMPLE_REPRESENTATION +
-                    ",uuid)";
+                    ")";
 
     private PersonAlgorithm personAlgorithm;
     private PatientAlgorithm patientAlgorithm;
