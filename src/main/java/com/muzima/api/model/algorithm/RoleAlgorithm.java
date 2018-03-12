@@ -36,13 +36,13 @@ public class RoleAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Role role = new Role();
         role.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         role.setName(JsonUtils.readAsString(serialized, "$['name']"));
         List<Object> privilegeObjectArray = JsonUtils.readAsObjectList(serialized, "$['privileges']");
         for (Object privilegeObject : privilegeObjectArray) {
-            role.add((Privilege) privilegeAlgorithm.deserialize(String.valueOf(privilegeObject)));
+            role.add((Privilege) privilegeAlgorithm.deserialize(String.valueOf(privilegeObject), isFullSerialization));
         }
         return role;
     }
@@ -54,14 +54,14 @@ public class RoleAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Role role = (Role) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", role.getUuid());
         JsonUtils.writeAsString(jsonObject, "name", role.getName());
         JSONArray privilegeArray = new JSONArray();
         for (Privilege privilege : role.getPrivileges()) {
-            String privilegeString = privilegeAlgorithm.serialize(privilege);
+            String privilegeString = privilegeAlgorithm.serialize(privilege, isFullSerialization);
             privilegeArray.add(JsonPath.read(privilegeString, "$"));
         }
         jsonObject.put("privileges", privilegeArray);

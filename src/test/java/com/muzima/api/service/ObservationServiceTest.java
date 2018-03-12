@@ -69,9 +69,10 @@ public class ObservationServiceTest {
         String path = System.getProperty("java.io.tmpdir") + "/muzima/" + UUID.randomUUID().toString();
         ContextFactory.setProperty(Constants.LUCENE_DIRECTORY_PATH, path);
         context = ContextFactory.createContext();
+        context.setPreferredLocale("en");
         context.openSession();
         if (!context.isAuthenticated()) {
-            context.authenticate("admin", "test", "http://localhost:8081/openmrs-standalone");
+            context.authenticate("admin", "test", "http://demo2.muzima.org", false);
         }
         patientService = context.getPatientService();
         conceptService = context.getService(ConceptService.class);
@@ -82,7 +83,7 @@ public class ObservationServiceTest {
         observations = new ArrayList<Observation>();
         for (Patient patient : patients) {
             for (Concept concept : concepts) {
-                logger.info("Downloading observations on '{}' for: '{}'", concept.getName(), patient.getFamilyName());
+                logger.info("Downloading observations on '{}' for: '{}'", concept.getName(), patient.getGivenName());
                 List<Observation> downloadedObservations =
                         observationService.downloadObservationsByPatientAndConcept(patient, concept);
                 logger.info("Number of observations downloaded: {}", downloadedObservations.size());

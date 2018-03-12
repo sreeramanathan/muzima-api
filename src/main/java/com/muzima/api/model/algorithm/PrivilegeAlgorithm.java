@@ -26,7 +26,7 @@ public class PrivilegeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Privilege privilege = new Privilege();
         privilege.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         privilege.setName(JsonUtils.readAsString(serialized, "$['name']"));
@@ -40,7 +40,7 @@ public class PrivilegeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Privilege privilege = (Privilege) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", privilege.getUuid());

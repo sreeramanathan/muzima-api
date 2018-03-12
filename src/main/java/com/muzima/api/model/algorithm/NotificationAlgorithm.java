@@ -10,6 +10,7 @@ package com.muzima.api.model.algorithm;
 
 import com.jayway.jsonpath.JsonPath;
 import com.muzima.api.model.Notification;
+import com.muzima.api.model.Patient;
 import com.muzima.api.model.Person;
 import com.muzima.search.api.model.object.Searchable;
 import com.muzima.util.JsonUtils;
@@ -22,13 +23,16 @@ public class NotificationAlgorithm extends BaseOpenmrsAlgorithm {
 
     public static final String NOTIFICATION_STANDARD_REPRESENTATION =
             "(uuid,subject,dateCreated,source,status,payload," +
+                    "patient:" + PatientAlgorithm.PATIENT_STANDARD_REPRESENTATION + "," +
                     "sender:" + PersonAlgorithm.PERSON_STANDARD_REPRESENTATION + "," +
                     "receiver:" + PersonAlgorithm.PERSON_STANDARD_REPRESENTATION + ")";
 
     private PersonAlgorithm personAlgorithm;
+    private PatientAlgorithm patientAlgorithm;
 
     public NotificationAlgorithm() {
         this.personAlgorithm = new PersonAlgorithm();
+        this.patientAlgorithm = new PatientAlgorithm();
     }
 
     /**
@@ -38,20 +42,25 @@ public class NotificationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete observation object
      */
     @Override
-    public Notification deserialize(final String serialized) throws IOException {
+    public Notification deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Notification notification = new Notification();
         notification.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
-        notification.setSubject(JsonUtils.readAsString(serialized, "$['subject']"));
-        notification.setDateCreated(JsonUtils.readAsDate(serialized, "$['dateCreated']"));
-        notification.setSource(JsonUtils.readAsString(serialized, "$['source']"));
-        notification.setStatus(JsonUtils.readAsString(serialized, "$['status']"));
-        notification.setPayload(JsonUtils.readAsString(serialized, "$['payload']"));
+        if(isFullSerialization) {
+            notification.setSubject(JsonUtils.readAsString(serialized, "$['subject']"));
+            notification.setDateCreated(JsonUtils.readAsDate(serialized, "$['dateCreated']"));
+            notification.setSource(JsonUtils.readAsString(serialized, "$['source']"));
+            notification.setStatus(JsonUtils.readAsString(serialized, "$['status']"));
+            notification.setPayload(JsonUtils.readAsString(serialized, "$['payload']"));
 
-        Object senderObject = JsonUtils.readAsObject(serialized, "$['sender']");
-        notification.setSender((Person) personAlgorithm.deserialize(String.valueOf(senderObject)));
+            Object patientObject = JsonUtils.readAsObject(serialized, "$['patient']");
+            notification.setPatient((Patient) patientAlgorithm.deserialize(String.valueOf(patientObject), isFullSerialization));
 
-        Object receiverObject = JsonUtils.readAsObject(serialized, "$['receiver']");
-        notification.setReceiver((Person) personAlgorithm.deserialize(String.valueOf(receiverObject)));
+            Object senderObject = JsonUtils.readAsObject(serialized, "$['sender']");
+            notification.setSender((Person) personAlgorithm.deserialize(String.valueOf(senderObject), isFullSerialization));
+
+            Object receiverObject = JsonUtils.readAsObject(serialized, "$['receiver']");
+            notification.setReceiver((Person) personAlgorithm.deserialize(String.valueOf(receiverObject), isFullSerialization));
+        }
         return notification;
     }
 
@@ -62,21 +71,26 @@ public class NotificationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Notification notification = (Notification) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", notification.getUuid());
-        JsonUtils.writeAsString(jsonObject, "subject", notification.getSubject());
-        JsonUtils.writeAsDate(jsonObject, "dateCreated", notification.getDateCreated());
-        JsonUtils.writeAsString(jsonObject, "source", notification.getSource());
-        JsonUtils.writeAsString(jsonObject, "status", notification.getStatus());
-        JsonUtils.writeAsString(jsonObject, "payload", notification.getPayload());
+        if(isFullSerialization) {
+            JsonUtils.writeAsString(jsonObject, "subject", notification.getSubject());
+            JsonUtils.writeAsDate(jsonObject, "dateCreated", notification.getDateCreated());
+            JsonUtils.writeAsString(jsonObject, "source", notification.getSource());
+            JsonUtils.writeAsString(jsonObject, "status", notification.getStatus());
+            JsonUtils.writeAsString(jsonObject, "payload", notification.getPayload());
 
-        String sender = personAlgorithm.serialize(notification.getSender());
-        jsonObject.put("sender", JsonPath.read(sender, "$"));
+            String patient = patientAlgorithm.serialize(notification.getPatient(), isFullSerialization);
+            jsonObject.put("patient", JsonPath.read(patient, "$"));
 
-        String receiver = personAlgorithm.serialize(notification.getReceiver());
-        jsonObject.put("receiver", JsonPath.read(receiver, "$"));
+            String sender = personAlgorithm.serialize(notification.getSender(), isFullSerialization);
+            jsonObject.put("sender", JsonPath.read(sender, "$"));
+
+            String receiver = personAlgorithm.serialize(notification.getReceiver(), isFullSerialization);
+            jsonObject.put("receiver", JsonPath.read(receiver, "$"));
+        }
         return jsonObject.toJSONString();
     }
 }

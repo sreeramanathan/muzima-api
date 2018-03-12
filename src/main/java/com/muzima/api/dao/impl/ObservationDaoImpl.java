@@ -50,6 +50,53 @@ public class ObservationDaoImpl extends OpenmrsDaoImpl<Observation> implements O
     }
 
     @Override
+    public List<Observation> get(final String patientUuid, final int conceptId) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter patientFilter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(patientFilter);
+        }
+        if (!StringUtil.isEmpty(Integer.toString(conceptId))) {
+            Filter conceptFilter = FilterFactory.createFilter("conceptId", Integer.toString(conceptId));
+            filters.add(conceptFilter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
+
+    @Override
+    public List<Observation> get(final String patientUuid, final String conceptUuid, final String encounterUuid) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter patientFilter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(patientFilter);
+        }
+        if (!StringUtil.isEmpty(conceptUuid)) {
+            Filter conceptFilter = FilterFactory.createFilter("conceptUuid", conceptUuid);
+            filters.add(conceptFilter);
+        }
+        if (!StringUtil.isEmpty(encounterUuid)) {
+            Filter conceptFilter = FilterFactory.createFilter("encounterUuid", encounterUuid);
+            filters.add(conceptFilter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
+
+    @Override
+    public int count(final String patientUuid, final String conceptUuid) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter patientFilter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(patientFilter);
+        }
+        if (!StringUtil.isEmpty(conceptUuid)) {
+            Filter conceptFilter = FilterFactory.createFilter("conceptUuid", conceptUuid);
+            filters.add(conceptFilter);
+        }
+
+        return service.countObjects(filters, daoClass);
+    }
+
+    @Override
     public List<Observation> get(final String patientUuid, final String conceptUuid,
                                  final Integer page, final Integer pageSize) throws IOException {
         List<Filter> filters = new ArrayList<Filter>();
@@ -79,6 +126,30 @@ public class ObservationDaoImpl extends OpenmrsDaoImpl<Observation> implements O
         List<Filter> filters = new ArrayList<Filter>();
         if (formDataUuid != null) {
             Filter conceptFilter = FilterFactory.createFilter("formDataUuid", formDataUuid);
+            filters.add(conceptFilter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
+
+    @Override
+    public List<Observation> get(final int encounterId) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(Integer.toString(encounterId))) {
+            Filter conceptFilter = FilterFactory.createFilter("encounterId", Integer.toString(encounterId));
+            filters.add(conceptFilter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
+
+    @Override
+    public List<Observation> get(final int encounterTypeId, final String patientUuid) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter patientFilter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(patientFilter);
+        }
+        if (!StringUtil.isEmpty(Integer.toString(encounterTypeId))) {
+            Filter conceptFilter = FilterFactory.createFilter("encounterTypeId", Integer.toString(encounterTypeId));
             filters.add(conceptFilter);
         }
         return service.getObjects(filters, daoClass);

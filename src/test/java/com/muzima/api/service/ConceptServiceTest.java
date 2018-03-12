@@ -54,9 +54,10 @@ public class ConceptServiceTest {
         String path = System.getProperty("java.io.tmpdir") + "/muzima/" + UUID.randomUUID().toString();
         ContextFactory.setProperty(Constants.LUCENE_DIRECTORY_PATH, path);
         context = ContextFactory.createContext();
+        context.setPreferredLocale("en");
         context.openSession();
         if (!context.isAuthenticated()) {
-            context.authenticate("admin", "test", "http://localhost:8081/openmrs-standalone");
+            context.authenticate("admin", "test", "http://demo2.muzima.org", false);
         }
         conceptService = context.getService(ConceptService.class);
         concepts = conceptService.downloadConceptsByName("HEIGHT (CM)");

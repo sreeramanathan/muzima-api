@@ -11,9 +11,11 @@ package com.muzima.api.model;
 /**
  * TODO: Write brief description about the class here.
  */
-public class EncounterType extends OpenmrsSearchable {
+public class EncounterType extends OpenmrsSearchable  {
 
     private String name;
+
+    private int id;
 
     /**
      * Get the name of the encounter type.
@@ -32,4 +34,10 @@ public class EncounterType extends OpenmrsSearchable {
     public void setName(final String name) {
         this.name = name;
     }
+
+    public int getId(){ return id; }
+
+    public void setId(int id) { this.id = id; }
+
+
 }

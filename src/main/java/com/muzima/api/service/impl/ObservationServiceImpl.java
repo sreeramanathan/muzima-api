@@ -315,6 +315,16 @@ public class ObservationServiceImpl implements ObservationService {
      * @see ObservationService#getObservationsByPatient(String)
      */
     @Override
+    public List<Observation> getObservationsByPatient(final String patientUuid,final Integer page, final Integer pageSize) throws IOException {
+        return observationDao.get(patientUuid, StringUtil.EMPTY, page, pageSize);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByPatient(String)
+     */
+    @Override
     public List<Observation> getObservationsByPatient(final Patient patient) throws IOException {
         return getObservationsByPatient(patient.getUuid());
     }
@@ -327,6 +337,47 @@ public class ObservationServiceImpl implements ObservationService {
     @Override
     public List<Observation> getObservationsByPatientAndConcept(final String patientUuid, final String conceptUuid) throws IOException {
         return observationDao.get(patientUuid, conceptUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByPatientAndConcept(String, int)
+     */
+    @Override
+    public List<Observation> getObservationsByPatientAndConcept(final String patientUuid, final int conceptId) throws IOException {
+        return observationDao.get(patientUuid, conceptId);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByEncounter(int)
+     */
+    @Override
+    public List<Observation> getObservationsByEncounter(final int encounterId) throws IOException {
+        return observationDao.get(encounterId);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByEncounter(String)
+     */
+    @Override
+    public List<Observation> getObservationsByEncounter(final String encounterUuid) throws IOException {
+        List<Observation> obs = observationDao.get(null, null ,encounterUuid);
+        return obs;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#getObservationsByEncounterType(int,String)
+     */
+    @Override
+    public List<Observation> getObservationsByEncounterType(final int encounterTypeId,final String patientUuid) throws IOException {
+        return observationDao.get(encounterTypeId,patientUuid);
     }
 
 
@@ -373,6 +424,16 @@ public class ObservationServiceImpl implements ObservationService {
     /**
      * {@inheritDoc}
      *
+     * @see ObservationService#countObservationsByPatient(String)
+     */
+    @Override
+    public int countObservationsByPatient(final String patientUuid) throws IOException {
+        return observationDao.count(patientUuid, StringUtil.EMPTY);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see ObservationService#deleteObservation(com.muzima.api.model.Observation)
      */
     @Override
@@ -388,5 +449,15 @@ public class ObservationServiceImpl implements ObservationService {
     @Override
     public void deleteObservations(final List<Observation> observations) throws IOException {
         observationDao.delete(observations, Constants.UUID_OBSERVATION_RESOURCE);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ObservationService#deleteAll()
+     */
+    @Override
+    public void deleteAll() throws IOException {
+        observationDao.delete(observationDao.getAll(), Constants.UUID_OBSERVATION_RESOURCE);
     }
 }

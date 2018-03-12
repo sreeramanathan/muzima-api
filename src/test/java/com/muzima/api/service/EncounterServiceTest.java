@@ -59,9 +59,10 @@ public class EncounterServiceTest {
         String path = System.getProperty("java.io.tmpdir") + "/muzima/" + UUID.randomUUID().toString();
         ContextFactory.setProperty(Constants.LUCENE_DIRECTORY_PATH, path);
         context = ContextFactory.createContext();
+        context.setPreferredLocale("en");
         context.openSession();
         if (!context.isAuthenticated()) {
-            context.authenticate("admin", "test", "http://localhost:8081/openmrs-standalone");
+            context.authenticate("admin", "test", "http://demo2.muzima.org", false);
         }
         patientService = context.getPatientService();
         encounterService = context.getService(EncounterService.class);
@@ -387,6 +388,21 @@ public class EncounterServiceTest {
         Patient randomPatient = new Patient();
         randomPatient.setUuid(UUID.randomUUID().toString());
         assertThat(encounterService.getEncountersByPatient(randomPatient), empty());
+    }
+
+    /**
+     * @verifies return encounter that matches form data Uuid.
+     * @see EncounterService#getEncounterByFormDataUuid(String)
+     */
+    @Test
+    public void getEncounterByFormDataUuid_shouldReturnEncounterThatMatchesFormDataUuid() throws Exception {
+        String randomFormDataUuid = UUID.randomUUID().toString();
+        assertThat(encounterService.getEncounterByFormDataUuid(randomFormDataUuid),equalTo(null));
+
+        encounter.setFormDataUuid(randomFormDataUuid);
+        assertThat(encounter.getFormDataUuid(),equalTo(randomFormDataUuid));
+        encounterService.saveEncounter(encounter);
+        assertThat(encounterService.getEncounterByFormDataUuid(randomFormDataUuid).getFormDataUuid(),equalTo(randomFormDataUuid));
     }
 
     /**

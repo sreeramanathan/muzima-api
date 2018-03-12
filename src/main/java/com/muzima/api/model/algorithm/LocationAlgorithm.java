@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 public class LocationAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String LOCATION_STANDARD_REPRESENTATION = "(uuid,name)";
+    public static final String LOCATION_STANDARD_REPRESENTATION = "(uuid,name,id)";
 
     /**
      * Implementation of this method will define how the object will be serialized from the String representation.
@@ -29,10 +29,11 @@ public class LocationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Location location = new Location();
         location.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         location.setName(JsonUtils.readAsString(serialized, "$['name']"));
+        location.setId(JsonUtils.readAsInteger(serialized, "$['id']"));
         return location;
     }
 
@@ -43,11 +44,12 @@ public class LocationAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Location location = (Location) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", location.getUuid());
         JsonUtils.writeAsString(jsonObject, "name", location.getName());
+        JsonUtils.writeAsInteger(jsonObject, "id", location.getId());
         return jsonObject.toJSONString();
     }
 }

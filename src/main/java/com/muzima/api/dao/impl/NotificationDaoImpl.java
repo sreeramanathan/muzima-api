@@ -12,11 +12,14 @@ import com.muzima.api.dao.NotificationDao;
 import com.muzima.api.model.Notification;
 import com.muzima.search.api.filter.Filter;
 import com.muzima.search.api.filter.FilterFactory;
+import com.muzima.search.api.model.object.Searchable;
 import com.muzima.search.api.util.CollectionUtil;
 import com.muzima.search.api.util.StringUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class NotificationDaoImpl extends OpenmrsDaoImpl<Notification> implements NotificationDao {
@@ -108,6 +111,27 @@ public class NotificationDaoImpl extends OpenmrsDaoImpl<Notification> implements
         return service.getObjects(filters, daoClass);
     }
 
+    public List<Notification> getNotificationByPatient(final String patientUuid, final String receiverUuid, final String status) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter filter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(filter);
+        } else
+            return null;
+
+        if (!StringUtil.isEmpty(receiverUuid)) {
+            Filter filter = FilterFactory.createFilter("receiverUuid", receiverUuid);
+            filters.add(filter);
+        } else
+            return null;
+
+        if (!StringUtil.isEmpty(status)) {
+            Filter filter = FilterFactory.createFilter("status", status);
+            filters.add(filter);
+        }
+        return service.getObjects(filters, daoClass);
+    }
+
     @Override
     public List<Notification> getNotificationByReceiver(final String receiverUuid, final Integer page,
                                                         final Integer pageSize) throws IOException {
@@ -135,6 +159,22 @@ public class NotificationDaoImpl extends OpenmrsDaoImpl<Notification> implements
             notification = notifications.get(0);
         }
         return notification;
+    }
+
+    @Override
+    public void sendNotification(String patientUuid, Notification notification) {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)){
+            Filter filter = FilterFactory.createFilter("patientUuid",patientUuid);
+            filters.add(filter);
+        }
+
+        List<Notification> notificationList = Collections.singletonList(notification);
+        try {
+            service.createObjects(Arrays.<Searchable>asList(notification),context.getResource("notification"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

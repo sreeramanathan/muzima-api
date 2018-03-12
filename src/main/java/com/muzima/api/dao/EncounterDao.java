@@ -29,4 +29,56 @@ public interface EncounterDao extends OpenmrsDao<Encounter> {
      * @throws java.io.IOException when the search api unable to process the resource.
      */
     List<Encounter> getEncountersByPatientUuid(final String patientUuid) throws IOException;
+
+
+    /**
+     * Get Encounter from local data repository with matching form data uuid.
+     *
+     * @param formDataUuid the form data uuid.
+     * @return Encounter with matching form data uuid.
+     * @throws java.io.IOException when the search api unable to process the resource.
+     */
+    List<Encounter> getEncountersByFormDataUuid(final String formDataUuid) throws IOException;
+
+    /**
+     * Count list of encounters for particular patient.
+     *
+     * @param patientUuid the patient uuid.
+     * @return number of encounters for the patient.
+     * @throws java.io.IOException when the search api unable to process the resource.
+     */
+    int countEncountersByPatientUuid(final String patientUuid) throws IOException;
+
+    /**
+     * Get list of encounters for particular patient given encounter type name.
+     *
+     * @param patientUuid the patient uuid.
+     * @param name encounter type names.
+     * @return list of encounters for the patient.
+     * @throws java.io.IOException when the search api unable to process the resource.
+     */
+    List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException;
+
+    /**
+     * Get list of encounters for particular patient given encounter type Uuid.
+     *
+     * @param patientUuid the patient uuid.
+     * @param encounterTypeUuid encounter type Uuid.
+     * @return list of encounters for the patient.
+     * @throws java.io.IOException when the search api unable to process the resource.
+     */
+    List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException;
+
+
+    /**
+     * Get list of encounters for particular patient given encounter type Id.
+     *
+     * @param patientUuid the patient uuid.
+     * @param encounterTypeId encounter type Id.
+     * @return list of encounters for the patient.
+     * @throws java.io.IOException when the search api unable to process the resource.
+     */
+    List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException;
+
+
 }

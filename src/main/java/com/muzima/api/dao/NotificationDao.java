@@ -52,7 +52,20 @@ public interface NotificationDao extends OpenmrsDao<Notification> {
     List<Notification> getNotificationByReceiver(final String receiverUuid, final Integer page,
                                                  final Integer pageSize) throws IOException;
 
+    List<Notification> getNotificationByPatient(final String patientUuid, final String receiverUuid,
+                                                final String status) throws IOException;
+
     Notification getNotificationBySource(final String source) throws IOException;
+
+
+    /**
+     * Dao method that enables the android client to send notification to server side,
+     * e.g for providers and admins to access.
+     *
+     * @param patientUuid - final String
+     * @param notification - Notification
+     */
+    void sendNotification(final String patientUuid, Notification notification);
 
 
 }

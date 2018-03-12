@@ -18,6 +18,11 @@ public class Constants {
 
     public static final int TYPE_STRING = 3;
     /*
+    Network service constants
+
+     */
+    public static final int CONNECTION_TIMEOUT = 3000;
+    /*
      * Context configuration.
      */
     public static final String LUCENE_DIRECTORY_PATH = "configuration.lucene.directory";
@@ -41,6 +46,8 @@ public class Constants {
     public static final String CONNECTION_USERNAME = "connection.openmrs.username";
 
     public static final String CONNECTION_PASSWORD = "connection.openmrs.password";
+
+    public static final String PREFERRED_LOCALE = "configuration.preferred.locale";
     /*
      * Resource configuration.
      */
@@ -65,6 +72,8 @@ public class Constants {
     public static final String SEARCH_ROLE_RESOURCE = "Search Role Resource";
 
     public static final String SEARCH_USER_RESOURCE = "Search User Resource";
+
+    public static final String SEARCH_LOCATION_RESOURCE = "Search Location Resource";
 
     public static final String UUID_DYNAMIC_COHORT_RESOURCE = "Uuid Dynamic Cohort Resource";
 
@@ -116,9 +125,32 @@ public class Constants {
 
     public static final String UUID_LAST_SYNC_TIME = "Uuid Last Sync Time Resource";
 
+    public static final String UUID_LOCATION_RESOURCE = "Uuid Location Resource";
+
     public static final String UUID_SEPARATOR = ",";
 
     public static final String UUID_TYPE_SEPARATOR = ";";
 
     public static final String OBSERVATION_CREATED_ON_PHONE = "observationFromPhoneUuid";
+
+    public static final String UUID_PROVIDER_RESOURCE = "Uuid Provider Resource";
+
+    public static final String SEARCH_PROVIDER_RESOURCE = "Search Provider Resource";
+
+    public static final String UUID_SETUP_CONFIGURATION_RESOURCE = "Uuid Setup Configuration Resource";
+
+    public static final String SEARCH_SETUP_CONFIGURATION_RESOURCE = "Search Setup Configuration Resource";
+
+    public static final String UUID_SETUP_CONFIGURATION_TEMPLATE_RESOURCE = "Uuid Setup Configuration Template Resource";
+
+    public static final String SEARCH_SETUP_CONFIGURATION_TEMPLATE_RESOURCE = "Search Setup Configuration Template Resource";
+
+    public static final String UUID_MUZIMA_SETTING_RESOURCE = "Uuid Muzima Setting Resource";
+
+    public static final String SEARCH_MUZIMA_SETTING_RESOURCE = "Search Muzima Setting Resource";
+
+    public static final class ServerSettings{
+        public static final String PATIENT_IDENTIFIER_AUTOGENERATTION_SETTING = "PatientIdentifier.AutoGeneration";
+        public static final Boolean PATIENT_IDENTIFIER_AUTOGENERATTION_SETTING_DEFAULT_VALUE = true;
+    }
 }

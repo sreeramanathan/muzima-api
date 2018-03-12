@@ -33,13 +33,13 @@ public class PersonAttributeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete observation object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         PersonAttribute personAttribute = new PersonAttribute();
         personAttribute.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         personAttribute.setAttribute(JsonUtils.readAsString(serialized, "$['hydratedObject']"));
         Object attributeTypeObject = JsonUtils.readAsObject(serialized, "$['attributeType']");
         PersonAttributeType attributeType =
-                (PersonAttributeType) personAttributeTypeAlgorithm.deserialize(String.valueOf(attributeTypeObject));
+                (PersonAttributeType) personAttributeTypeAlgorithm.deserialize(String.valueOf(attributeTypeObject), isFullSerialization);
         personAttribute.setAttributeType(attributeType);
         return personAttribute;
     }
@@ -51,12 +51,12 @@ public class PersonAttributeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         PersonAttribute personAttribute = (PersonAttribute) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", personAttribute.getUuid());
         JsonUtils.writeAsString(jsonObject, "hydratedObject", personAttribute.getAttribute());
-        String identifierType = personAttributeTypeAlgorithm.serialize(personAttribute.getAttributeType());
+        String identifierType = personAttributeTypeAlgorithm.serialize(personAttribute.getAttributeType(), isFullSerialization);
         jsonObject.put("attributeType", JsonPath.read(identifierType, "$"));
         return jsonObject.toJSONString();
     }

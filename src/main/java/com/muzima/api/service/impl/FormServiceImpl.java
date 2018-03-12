@@ -16,6 +16,7 @@ import com.muzima.api.model.Form;
 import com.muzima.api.model.FormData;
 import com.muzima.api.model.FormTemplate;
 import com.muzima.api.service.FormService;
+import com.muzima.search.api.filter.Filter;
 import com.muzima.search.api.util.CollectionUtil;
 import com.muzima.search.api.util.StringUtil;
 import com.muzima.util.Constants;
@@ -224,7 +225,6 @@ public class FormServiceImpl implements FormService {
         }};
         List<FormTemplate> formTemplates = formTemplateDao.download(parameter, Constants.UUID_FORM_TEMPLATE_RESOURCE);
         if (!CollectionUtil.isEmpty(formTemplates)) {
-
             if (formTemplates.size() > 1) {
                 throw new IOException("Unable to uniquely identify a form template record.");
             }
@@ -374,6 +374,17 @@ public class FormServiceImpl implements FormService {
     /**
      * {@inheritDoc}
      *
+     * @see FormService#getFormDataByUuids(java.util.List)
+     */
+    @Override
+    public List<FormData> getFormDataByUuids(final List<String> uuids) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        return formDataDao.getFormDataByUuid(uuids);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see com.muzima.api.service.FormService#countAllFormData()
      */
     @Override
@@ -414,6 +425,16 @@ public class FormServiceImpl implements FormService {
     /**
      * {@inheritDoc}
      *
+     * @see FormService#countFormDataByPatient(String, String)
+     */
+    @Override
+    public int countFormDataByPatient(final String patientUuid, final String status) throws IOException {
+        return formDataDao.countAllFormData(patientUuid, StringUtil.EMPTY, status);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see FormService#deleteFormData(com.muzima.api.model.FormData)
      */
     @Override
@@ -447,7 +468,7 @@ public class FormServiceImpl implements FormService {
 
     @Override
     public boolean syncFormData(final FormData formData) throws IOException {
-        return formDataDao.syncFormData(formData);
+        return formDataDao.syncFormData(formData );
     }
 
     @Override

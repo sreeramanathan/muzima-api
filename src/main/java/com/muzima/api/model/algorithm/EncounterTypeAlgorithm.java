@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
 
-    public static final String ENCOUNTER_TYPE_STANDARD_REPRESENTATION = "(uuid,name)";
+    public static final String ENCOUNTER_TYPE_STANDARD_REPRESENTATION = "(uuid,name,id)";
 
     /**
      * Implementation of this method will define how the object will be serialized from the String representation.
@@ -29,10 +29,11 @@ public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         EncounterType encounterType = new EncounterType();
         encounterType.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
         encounterType.setName(JsonUtils.readAsString(serialized, "$['name']"));
+        encounterType.setId(JsonUtils.readAsInteger(serialized, "$[id]"));
         return encounterType;
     }
 
@@ -43,11 +44,12 @@ public class EncounterTypeAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         EncounterType encounterType = (EncounterType) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", encounterType.getUuid());
         JsonUtils.writeAsString(jsonObject, "name", encounterType.getName());
+        JsonUtils.writeAsInteger(jsonObject,"id", encounterType.getId());
         return jsonObject.toJSONString();
     }
 }

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class SearchConceptResolver extends BaseOpenmrsResolver {
 
-    private static final String REPRESENTATION =
+    public static final String REPRESENTATION =
             "?v=custom:" + ConceptAlgorithm.CONCEPT_STANDARD_REPRESENTATION;
 
     /**
@@ -34,6 +34,7 @@ public class SearchConceptResolver extends BaseOpenmrsResolver {
         for (String key : resourceParams.keySet()) {
             paramBuilder.append("&").append(key).append("=").append(URLEncoder.encode(resourceParams.get(key), "UTF-8"));
         }
-        return getConfiguration().getServer() + "/ws/rest/v1/concept" + REPRESENTATION + paramBuilder.toString();
+        String url=getConfiguration().getServer() + "/ws/rest/v1/muzima/concept" + REPRESENTATION + paramBuilder.toString();
+        return url;
     }
 }

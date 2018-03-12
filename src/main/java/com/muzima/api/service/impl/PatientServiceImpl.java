@@ -11,8 +11,13 @@ package com.muzima.api.service.impl;
 import com.google.inject.Inject;
 import com.muzima.api.dao.MemberDao;
 import com.muzima.api.dao.PatientDao;
+import com.muzima.api.dao.PatientIdentifierTypeDao;
+import com.muzima.api.dao.PersonAttributeTypeDao;
 import com.muzima.api.model.CohortMember;
 import com.muzima.api.model.Patient;
+import com.muzima.api.model.PatientIdentifierType;
+import com.muzima.api.model.PersonAttributeType;
+import com.muzima.api.service.CohortService;
 import com.muzima.api.service.PatientService;
 import com.muzima.search.api.util.CollectionUtil;
 import com.muzima.util.Constants;
@@ -32,6 +37,15 @@ public class PatientServiceImpl implements PatientService {
 
     @Inject
     private MemberDao memberDao;
+
+    @Inject
+    private PatientIdentifierTypeDao patientIdentifierTypeDao;
+
+    @Inject
+    private PersonAttributeTypeDao personAttributeTypeDao;
+
+    @Inject
+    private CohortService cohortService;
 
     protected PatientServiceImpl() {
     }
@@ -189,11 +203,45 @@ public class PatientServiceImpl implements PatientService {
     /**
      * {@inheritDoc}
      *
+     * @see com.muzima.api.service.PatientService#countPatients(String)
+     */
+    @Override
+    public Integer countPatients(final String cohortUuid) throws IOException {
+        return cohortService.countCohortMembers(cohortUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see com.muzima.api.service.PatientService#getAllPatients()
      */
     @Override
     public List<Patient> getAllPatients() throws IOException {
         return sortDisplayNameAscending(patientDao.getAll());
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.PatientService#getPatients(Integer, Integer)
+     */
+    @Override
+    public List<Patient> getPatients(final Integer page,
+                                        final Integer pageSize) throws IOException {
+        return sortDisplayNameAscending(patientDao.getAll(page, pageSize));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.PatientService#getPatients(String, Integer, Integer)
+     */
+    @Override
+    public List<Patient> getPatients(final String cohortUuid,
+                                        final Integer page,
+                                        final Integer pageSize) throws IOException {
+        List<CohortMember> cohortMembers = cohortService.getCohortMembers(cohortUuid, page, pageSize);
+        return getPatientsFromCohortMembers(cohortMembers);
     }
 
 
@@ -215,6 +263,12 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<Patient> searchPatients(final String term) throws IOException, ParseException {
         return sortDisplayNameAscending(patientDao.search(term));
+    }
+
+    @Override
+    public List<Patient> searchPatients(final String term, final Integer page,
+                                        final Integer pageSize) throws IOException, ParseException {
+        return sortDisplayNameAscending(patientDao.search(term, page, pageSize));
     }
 
     /**
@@ -259,12 +313,14 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers) {
+    public List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers) throws IOException {
         List<Patient> patients = new ArrayList<Patient>();
         for (CohortMember member : cohortMembers) {
-            patients.add(member.getPatient());
+            Patient patient = member.getPatient();
+            if (patient != null)
+                patients.add(getPatientByUuid(patient.getUuid()));
         }
-        return patients;
+        return sortDisplayNameAscending(patients);
     }
 
     private boolean isNotAPartOfAnyCohort(Patient patient) throws IOException {
@@ -275,6 +331,34 @@ public class PatientServiceImpl implements PatientService {
         return patientDao.getByUuid(patient.getUuid()) != null;
     }
 
+    @Override
+    public List<PatientIdentifierType> getAllPatientIdentifierTypes() throws IOException {
+        return patientIdentifierTypeDao.getAll();
+    }
+
+    @Override
+    public List<PatientIdentifierType> getPatientIdentifierTypeByName(String name) throws IOException {
+        return patientIdentifierTypeDao.getByName(name);
+    }
+
+    @Override
+    public PatientIdentifierType getPatientIdentifierTypeByUuid(String uuid) throws IOException {
+        return patientIdentifierTypeDao.getByUuid(uuid);
+    }
+
+    @Override
+    public List<PersonAttributeType> getAllPersonAttributeTypes() throws IOException {
+        return personAttributeTypeDao.getAll();
+    }
+    @Override
+    public List<PersonAttributeType> getPersonAttributeTypeByName(String name) throws IOException{
+        return personAttributeTypeDao.getByName(name);
+    }
+
+    @Override
+    public PersonAttributeType getPersonAttributeTypeByUuid(String uuid) throws IOException{
+        return personAttributeTypeDao.getByUuid(uuid);
+    }
     private List<Patient> sortDisplayNameAscending(List<Patient> patientList) {
         Collections.sort(patientList);
         return patientList;

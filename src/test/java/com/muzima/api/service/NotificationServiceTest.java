@@ -56,9 +56,10 @@ public class NotificationServiceTest {
         String path = System.getProperty("java.io.tmpdir") + "/muzima/" + UUID.randomUUID().toString();
         ContextFactory.setProperty(Constants.LUCENE_DIRECTORY_PATH, path);
         context = ContextFactory.createContext();
+        context.setPreferredLocale("en");
         context.openSession();
         if (!context.isAuthenticated()) {
-            context.authenticate("admin", "test", "http://localhost:8080/openmrs");
+            context.authenticate("admin", "test", "http://localhost:8080/openmrs", false);
         }
         notificationService = context.getService(NotificationService.class);
     }
@@ -143,9 +144,7 @@ public class NotificationServiceTest {
     public void saveNotifications_shouldSaveNotificationsToLocalDataRepository() throws Exception {
         List<Notification> notifications = notificationService.getNotificationByReceiver(receiverUuid);
         int notificationCounter = notifications.size();
-        System.out.println("notificationCounter = " + notificationCounter);
         dynamicNotifications = notificationService.downloadNotificationByReceiver(receiverUuid);
-        System.out.println("Downloaded notifications = " + dynamicNotifications.size());
         notificationService.saveNotifications(dynamicNotifications);
         assertThat(notificationCounter + dynamicNotifications.size(), equalTo(1));
 

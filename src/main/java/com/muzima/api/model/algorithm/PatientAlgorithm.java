@@ -11,6 +11,7 @@ package com.muzima.api.model.algorithm;
 import com.jayway.jsonpath.JsonPath;
 import com.muzima.api.model.Patient;
 import com.muzima.api.model.PatientIdentifier;
+import com.muzima.api.model.PersonAddress;
 import com.muzima.api.model.PersonAttribute;
 import com.muzima.api.model.PersonName;
 import com.muzima.search.api.model.object.Searchable;
@@ -28,15 +29,18 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
             "(uuid,voided,gender,birthdate," +
                     "names:" + PersonNameAlgorithm.PERSON_NAME_REPRESENTATION + "," +
                     "identifiers:" + PatientIdentifierAlgorithm.PATIENT_IDENTIFIER_REPRESENTATION + "," +
-                    "attributes:" + PersonAttributeAlgorithm.PERSON_ATTRIBUTE_REPRESENTATION + ",)";
+                    "attributes:" + PersonAttributeAlgorithm.PERSON_ATTRIBUTE_REPRESENTATION + "," +
+                    "addresses:" + PersonAddressAlgorithm.PERSON_ADDRESS_REPRESENTATION + ",)";
     private PersonNameAlgorithm personNameAlgorithm;
     private PatientIdentifierAlgorithm patientIdentifierAlgorithm;
     private PersonAttributeAlgorithm personAttributeAlgorithm;
+    private PersonAddressAlgorithm personAddressAlgorithm;
 
     public PatientAlgorithm() {
         this.personNameAlgorithm = new PersonNameAlgorithm();
         this.patientIdentifierAlgorithm = new PatientIdentifierAlgorithm();
         this.personAttributeAlgorithm = new PersonAttributeAlgorithm();
+        this.personAddressAlgorithm = new PersonAddressAlgorithm();
     }
 
     /*
@@ -46,25 +50,32 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
     * @return the concrete observation object
     */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         Patient patient = new Patient();
         patient.setUuid(JsonUtils.readAsString(serialized, "$['uuid']"));
-        patient.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
-        patient.setGender(JsonUtils.readAsString(serialized, "$['gender']"));
-        patient.setBirthdate(JsonUtils.readAsDate(serialized, "$['birthdate']"));
-        List<Object> personNameObjects = JsonUtils.readAsObjectList(serialized, "$['names']");
-        for (Object personNameObject : personNameObjects) {
-            patient.addName((PersonName) personNameAlgorithm.deserialize(String.valueOf(personNameObject)));
-        }
-        List<Object> identifierObjects = JsonUtils.readAsObjectList(serialized, "$['identifiers']");
-        for (Object identifierObject : identifierObjects) {
-            patient.addIdentifier(
-                    (PatientIdentifier) patientIdentifierAlgorithm.deserialize(String.valueOf(identifierObject)));
-        }
-        List<Object> attributesObjects = JsonUtils.readAsObjectList(serialized, "$['attributes']");
-        for (Object attributeObject : attributesObjects) {
-            patient.addattribute(
-                    (PersonAttribute) personAttributeAlgorithm.deserialize(String.valueOf(attributeObject)));
+        if(isFullSerialization) {
+            patient.setVoided(JsonUtils.readAsBoolean(serialized, "$['voided']"));
+            patient.setGender(JsonUtils.readAsString(serialized, "$['gender']"));
+            patient.setBirthdate(JsonUtils.readAsDate(serialized, "$['birthdate']"));
+            List<Object> personNameObjects = JsonUtils.readAsObjectList(serialized, "$['names']");
+            for (Object personNameObject : personNameObjects) {
+                patient.addName((PersonName) personNameAlgorithm.deserialize(String.valueOf(personNameObject), isFullSerialization));
+            }
+            List<Object> identifierObjects = JsonUtils.readAsObjectList(serialized, "$['identifiers']");
+            for (Object identifierObject : identifierObjects) {
+                patient.addIdentifier(
+                        (PatientIdentifier) patientIdentifierAlgorithm.deserialize(String.valueOf(identifierObject), isFullSerialization));
+            }
+            List<Object> attributesObjects = JsonUtils.readAsObjectList(serialized, "$['attributes']");
+            for (Object attributeObject : attributesObjects) {
+                patient.addattribute(
+                        (PersonAttribute) personAttributeAlgorithm.deserialize(String.valueOf(attributeObject), isFullSerialization));
+            }
+            List<Object> addressesObjects = JsonUtils.readAsObjectList(serialized, "$['addresses']");
+            for (Object addressesObject : addressesObjects) {
+                patient.addAddress(
+                        (PersonAddress) personAddressAlgorithm.deserialize(String.valueOf(addressesObject), isFullSerialization));
+            }
         }
         return patient;
     }
@@ -76,31 +87,40 @@ public class PatientAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         Patient patient = (Patient) object;
         JSONObject jsonObject = new JSONObject();
         JsonUtils.writeAsString(jsonObject, "uuid", patient.getUuid());
-        JsonUtils.writeAsBoolean(jsonObject, "voided", patient.isVoided());
-        JsonUtils.writeAsString(jsonObject, "gender", patient.getGender());
-        JsonUtils.writeAsDate(jsonObject, "birthdate", patient.getBirthdate());
-        JSONArray nameArray = new JSONArray();
-        for (PersonName personName : patient.getNames()) {
-            String name = personNameAlgorithm.serialize(personName);
-            nameArray.add(JsonPath.read(name, "$"));
+        if(isFullSerialization) {
+            JsonUtils.writeAsBoolean(jsonObject, "voided", patient.isVoided());
+            JsonUtils.writeAsString(jsonObject, "gender", patient.getGender());
+            JsonUtils.writeAsDate(jsonObject, "birthdate", patient.getBirthdate());
+            JSONArray nameArray = new JSONArray();
+            for (PersonName personName : patient.getNames()) {
+                String name = personNameAlgorithm.serialize(personName, isFullSerialization);
+                nameArray.add(JsonPath.read(name, "$"));
+            }
+            jsonObject.put("names", nameArray);
+            JSONArray identifierArray = new JSONArray();
+            for (PatientIdentifier identifier : patient.getIdentifiers()) {
+                String name = patientIdentifierAlgorithm.serialize(identifier, isFullSerialization);
+                identifierArray.add(JsonPath.read(name, "$"));
+            }
+            jsonObject.put("identifiers", identifierArray);
+            JSONArray attributeArray = new JSONArray();
+            for (PersonAttribute attribute : patient.getAtributes()) {
+                String name = personAttributeAlgorithm.serialize(attribute, isFullSerialization);
+                attributeArray.add(JsonPath.read(name, "$"));
+            }
+            jsonObject.put("attributes", attributeArray);
+
+            JSONArray addressArray = new JSONArray();
+            for (PersonAddress address : patient.getAddresses()) {
+                String name = personAddressAlgorithm.serialize(address, isFullSerialization);
+                addressArray.add(JsonPath.read(name, "$"));
+            }
+            jsonObject.put("addresses", addressArray);
         }
-        jsonObject.put("names", nameArray);
-        JSONArray identifierArray = new JSONArray();
-        for (PatientIdentifier identifier : patient.getIdentifiers()) {
-            String name = patientIdentifierAlgorithm.serialize(identifier);
-            identifierArray.add(JsonPath.read(name, "$"));
-        }
-        jsonObject.put("identifiers", identifierArray);
-        JSONArray attributeArray = new JSONArray();
-        for (PersonAttribute attribute : patient.getAtributes()) {
-            String name = personAttributeAlgorithm.serialize(attribute);
-            attributeArray.add(JsonPath.read(name, "$"));
-        }
-        jsonObject.put("attributes", attributeArray);
         return jsonObject.toJSONString();
     }
 }

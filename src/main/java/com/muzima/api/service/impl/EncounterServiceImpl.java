@@ -10,14 +10,17 @@ package com.muzima.api.service.impl;
 
 import com.google.inject.Inject;
 import com.muzima.api.dao.EncounterDao;
+import com.muzima.api.dao.EncounterTypeDao;
 import com.muzima.api.dao.PatientDao;
 import com.muzima.api.model.Encounter;
+import com.muzima.api.model.EncounterType;
 import com.muzima.api.model.Patient;
 import com.muzima.api.service.EncounterService;
 import com.muzima.search.api.util.CollectionUtil;
 import com.muzima.util.Constants;
 import com.muzima.util.DateUtils;
 import org.apache.lucene.queryParser.ParseException;
+import java.lang.System;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +39,9 @@ public class EncounterServiceImpl implements EncounterService {
 
     @Inject
     private EncounterDao encounterDao;
+
+    @Inject
+    private EncounterTypeDao encounterTypeDao;
 
     protected EncounterServiceImpl() {
     }
@@ -225,6 +231,16 @@ public class EncounterServiceImpl implements EncounterService {
     /**
      * {@inheritDoc}
      *
+     * @see com.muzima.api.service.EncounterService#getEncountersByPatientUuid(String)
+     */
+    @Override
+    public Integer countEncountersByPatientUuid(final String patientUuid) throws IOException {
+        return encounterDao.countEncountersByPatientUuid(patientUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see EncounterService#getEncountersByPatient(com.muzima.api.model.Patient)
      */
     @Override
@@ -302,6 +318,19 @@ public class EncounterServiceImpl implements EncounterService {
         encounterDao.delete(encounter, Constants.UUID_ENCOUNTER_RESOURCE);
     }
 
+    @Override
+    public Encounter getEncounterByFormDataUuid(String formDataUuid) throws IOException {
+        Encounter encounter = null;
+        List<Encounter> encounters =  encounterDao.getEncountersByFormDataUuid(formDataUuid);
+        if (!CollectionUtil.isEmpty(encounters)) {
+            if (encounters.size() > 1) {
+                throw new IOException("Unable to uniquely identify an encounter record.");
+            }
+            encounter = encounters.get(0);
+        }
+        return encounter;
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -311,4 +340,56 @@ public class EncounterServiceImpl implements EncounterService {
     public void deleteEncounters(final List<Encounter> encounters) throws IOException {
         encounterDao.delete(encounters, Constants.UUID_ENCOUNTER_RESOURCE);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#deleteAll
+     */
+    @Override
+    public void deleteAll() throws IOException {
+        encounterDao.delete(encounterDao.getAll(), Constants.UUID_ENCOUNTER_RESOURCE);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getAllEncounterTypes()
+     */
+    @Override
+    public List<EncounterType> getAllEncounterTypes() throws IOException {
+        return encounterTypeDao.getAll();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getEncountersByEncounterTypeNameAndPatientUuid(String name,String patientUuid)
+     */
+    @Override
+    public List<Encounter> getEncountersByEncounterTypeNameAndPatientUuid(final String name,final String patientUuid) throws IOException {
+        return encounterDao.getEncountersByEncounterTypeNameAndPatientUuid(name,patientUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getEncountersByEncounterTypeUuidAndPatientUuid(String encounterTypeUuid,String patientUuid)
+     */
+    @Override
+    public List<Encounter> getEncountersByEncounterTypeUuidAndPatientUuid(final String encounterTypeUuid,final String patientUuid) throws IOException {
+        return encounterDao.getEncountersByEncounterTypeUuidAndPatientUuid(encounterTypeUuid,patientUuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see com.muzima.api.service.EncounterService#getEncountersByEncounterTypeIdAndPatientUuid(int encounterTypeId,String patientUuid)
+     */
+    @Override
+    public List<Encounter> getEncountersByEncounterTypeIdAndPatientUuid(final int encounterTypeId,final String patientUuid) throws IOException {
+        return encounterDao.getEncountersByEncounterTypeIdAndPatientUuid(encounterTypeId,patientUuid);
+    }
+
+
 }

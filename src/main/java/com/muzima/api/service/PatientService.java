@@ -10,6 +10,8 @@ package com.muzima.api.service;
 import com.google.inject.ImplementedBy;
 import com.muzima.api.model.CohortMember;
 import com.muzima.api.model.Patient;
+import com.muzima.api.model.PatientIdentifierType;
+import com.muzima.api.model.PersonAttributeType;
 import com.muzima.api.service.impl.PatientServiceImpl;
 import org.apache.lucene.queryParser.ParseException;
 
@@ -114,6 +116,14 @@ public interface PatientService extends MuzimaInterface {
     Integer countAllPatients() throws IOException;
 
     /**
+     * Count all patient objects in cohort.
+     *
+     * @return the total number of patient objects.
+     * @throws IOException when search api unable to process the resource.
+     */
+    Integer countPatients(final String cohortUuid) throws IOException;
+
+    /**
      * Get all saved patients in the local repository.
      *
      * @return all registered patients or empty list when no patient is registered.
@@ -123,6 +133,35 @@ public interface PatientService extends MuzimaInterface {
      */
     List<Patient> getAllPatients() throws IOException;
 
+    /**
+     * Get all saved patients in the local repository, of the specified page and page size
+     *
+     * @param page the page number
+     * @param pageSize the number of patients per page.
+     *
+     * @return all registered patients or empty list when no patient is registered.
+     * @throws IOException when search api unable to process the resource.
+     * @should return all registered patients.
+     * @should return empty list when no patient is registered.
+     */
+    List<Patient> getPatients(final Integer page,
+                                 final Integer pageSize) throws IOException;
+
+    /**
+     * Get all saved patients in cohort in the local repository, of the specified page and page size
+     *
+     * @param cohortUuid the cohort ID
+     * @param page the page number
+     * @param pageSize the number of patients per page.
+     *
+     * @return all registered patients or empty list when no patient is registered.
+     * @throws IOException when search api unable to process the resource.
+     * @should return all registered patients.
+     * @should return empty list when no patient is registered.
+     */
+    List<Patient> getPatients(final String cohortUuid,
+                                 final Integer page,
+                                 final Integer pageSize) throws IOException;
     /**
      * Get list of patients with name similar to the search term.
      *
@@ -146,6 +185,8 @@ public interface PatientService extends MuzimaInterface {
      * @should return empty list when no patient match the search term.
      */
     List<Patient> searchPatients(final String term) throws IOException, ParseException;
+    List<Patient> searchPatients(final String term, final Integer page,
+                                 final Integer pageSize) throws IOException, ParseException;
 
     /**
      * Search for patients with matching characteristic on the name or identifier with the search term, within the give cohort.
@@ -183,5 +224,14 @@ public interface PatientService extends MuzimaInterface {
      */
     List<Patient> getPatientsNotInCohorts() throws IOException;
 
-    List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers);
+    List<Patient> getPatientsFromCohortMembers(List<CohortMember> cohortMembers) throws IOException;
+
+    List<PatientIdentifierType> getAllPatientIdentifierTypes() throws IOException;
+
+    List<PatientIdentifierType> getPatientIdentifierTypeByName(String name) throws IOException;
+
+    PatientIdentifierType getPatientIdentifierTypeByUuid(String uuid) throws IOException;
+    List<PersonAttributeType> getAllPersonAttributeTypes() throws IOException;
+    List<PersonAttributeType> getPersonAttributeTypeByName(String name) throws IOException;
+    PersonAttributeType getPersonAttributeTypeByUuid(String uuid) throws IOException;
 }

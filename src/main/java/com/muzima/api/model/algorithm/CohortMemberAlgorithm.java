@@ -35,12 +35,12 @@ public class CohortMemberAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the concrete patient object
      */
     @Override
-    public Searchable deserialize(final String serialized) throws IOException {
+    public Searchable deserialize(final String serialized, final boolean isFullSerialization) throws IOException {
         CohortMember cohortMember = new CohortMember();
         Object cohortObject = JsonUtils.readAsObject(serialized, "$['cohort']");
-        cohortMember.setCohort((Cohort) cohortAlgorithm.deserialize(String.valueOf(cohortObject)));
+        cohortMember.setCohort((Cohort) cohortAlgorithm.deserialize(String.valueOf(cohortObject),true));
         Object patientObject = JsonUtils.readAsObject(serialized, "$['patient']");
-        cohortMember.setPatient((Patient) patientAlgorithm.deserialize(String.valueOf(patientObject)));
+        cohortMember.setPatient((Patient) patientAlgorithm.deserialize(String.valueOf(patientObject), true));
         return cohortMember;
     }
 
@@ -51,12 +51,12 @@ public class CohortMemberAlgorithm extends BaseOpenmrsAlgorithm {
      * @return the string representation
      */
     @Override
-    public String serialize(final Searchable object) throws IOException {
+    public String serialize(final Searchable object, final boolean isFullSerialization) throws IOException {
         CohortMember cohortMember = (CohortMember) object;
         JSONObject jsonObject = new JSONObject();
-        String cohort = cohortAlgorithm.serialize(cohortMember.getCohort());
+        String cohort = cohortAlgorithm.serialize(cohortMember.getCohort(), true);
         jsonObject.put("cohort", JsonPath.read(cohort, "$"));
-        String patient = patientAlgorithm.serialize(cohortMember.getPatient());
+        String patient = patientAlgorithm.serialize(cohortMember.getPatient(), true);
         jsonObject.put("patient", JsonPath.read(patient, "$"));
         return jsonObject.toJSONString();
     }

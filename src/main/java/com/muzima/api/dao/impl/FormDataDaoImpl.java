@@ -8,6 +8,9 @@
 
 package com.muzima.api.dao.impl;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.muzima.api.dao.FormDataDao;
@@ -16,11 +19,8 @@ import com.muzima.api.model.resolver.SyncFormDataResolver;
 import com.muzima.search.api.filter.Filter;
 import com.muzima.search.api.filter.FilterFactory;
 import com.muzima.search.api.util.StringUtil;
-import net.minidev.json.JSONObject;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
@@ -49,6 +49,30 @@ public class FormDataDaoImpl extends SearchableDaoImpl<FormData> implements Form
         super(FormData.class);
     }
 
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see FormDataDao#countAllFormData(String, String, String)
+     */
+    @Override
+    public int countAllFormData(final String patientUuid, final String userUuid,
+                                final String status) throws IOException {
+        List<Filter> filters = new ArrayList<Filter>();
+        if (!StringUtil.isEmpty(patientUuid)) {
+            Filter patientFilter = FilterFactory.createFilter("patientUuid", patientUuid);
+            filters.add(patientFilter);
+        }
+        if (!StringUtil.isEmpty(userUuid)) {
+            Filter userFilter = FilterFactory.createFilter("userUuid", userUuid);
+            filters.add(userFilter);
+        }
+        if (!StringUtil.isEmpty(status)) {
+            Filter statusFilter = FilterFactory.createFilter("status", status);
+            filters.add(statusFilter);
+        }
+        return service.countObjects(filters, daoClass);
+    }
     /**
      * {@inheritDoc}
      *
@@ -57,6 +81,17 @@ public class FormDataDaoImpl extends SearchableDaoImpl<FormData> implements Form
     @Override
     public FormData getFormDataByUuid(final String uuid) throws IOException {
         return service.getObject(uuid, daoClass);
+    }
+    @Override
+    public List<FormData> getFormDataByUuid(final List<String> uuids) throws IOException {
+        List<FormData> formDataList = new ArrayList<FormData>();
+        for(String uuid:uuids){
+            FormData f = getFormDataByUuid(uuid);
+            if(f!=null){
+                formDataList.add(f);
+            }
+        }
+        return formDataList;
     }
 
     /**
@@ -118,14 +153,14 @@ public class FormDataDaoImpl extends SearchableDaoImpl<FormData> implements Form
         connection.setConnectTimeout(timeout);
         connection = resolver.authenticate(connection);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("dataSource", "Mobile Device");
-        jsonObject.put("payload", getPayloadBasedOnDiscriminator(formData));
-        jsonObject.put("discriminator", formData.getDiscriminator());
-
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
-        writer.write(jsonObject.toJSONString());
-        writer.close();
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonGenerator jsonGenerator = jsonFactory.createGenerator(connection.getOutputStream(), JsonEncoding.UTF8);
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeObjectField("dataSource", "Mobile Device");
+        jsonGenerator.writeObjectField("payload", getPayloadBasedOnDiscriminator(formData));
+        jsonGenerator.writeObjectField("discriminator", formData.getDiscriminator());
+        jsonGenerator.writeEndObject();
+        jsonGenerator.close();
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK

@@ -29,6 +29,8 @@ public class Concept extends OpenmrsSearchable implements Comparable<Concept> {
 
     private String unit;
 
+    private int id;
+
     private boolean precise;
 
     private ConceptType conceptType;
@@ -148,4 +150,8 @@ public class Concept extends OpenmrsSearchable implements Comparable<Concept> {
     public boolean isCreatedOnDevice() {
         return getUuid().startsWith(Constants.CONCEPT_CREATED_ON_PHONE);
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 }
